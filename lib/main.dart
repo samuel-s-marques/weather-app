@@ -1,11 +1,13 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:intl/date_symbol_data_local.dart';
 import 'package:weatherapp/pages/detail_page.dart';
 import 'package:weatherapp/pages/home_page.dart';
 
 Future main() async {
   await dotenv.load(fileName: ".env");
-  runApp(const MyApp());
+  initializeDateFormatting(Platform.localeName, null).then((_) => runApp(const MyApp()));
 }
 
 class MyApp extends StatelessWidget {
@@ -25,4 +27,3 @@ class MyApp extends StatelessWidget {
     );
   }
 }
-
