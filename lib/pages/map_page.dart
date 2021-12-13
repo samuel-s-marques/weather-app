@@ -94,9 +94,11 @@ class _MapPageState extends State<MapPage> with TickerProviderStateMixin {
     return FlutterMap(
       mapController: _mapController,
       options: MapOptions(
-        center: LatLng(51.5, -0.09),
-        zoom: 13.0,
-      ),
+          center: LatLng(51.5, -0.09),
+          zoom: 13.0,
+          onLongPress: (TapPosition, LatLng) {
+            print(LatLng);
+          }),
       layers: [
         TileLayerOptions(
           urlTemplate: "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
@@ -147,8 +149,10 @@ class _MapPageState extends State<MapPage> with TickerProviderStateMixin {
               onPressed: () async {
                 Position _currentPosition = await GeoApi().determinePosition();
 
-                _animatedMapMove(LatLng(_currentPosition.latitude,
-                    _currentPosition.longitude), 13.0);
+                _animatedMapMove(
+                    LatLng(
+                        _currentPosition.latitude, _currentPosition.longitude),
+                    13.0);
               },
               backgroundColor: Colors.white,
               child: Icon(Icons.gps_fixed, color: Color(0xFF4D4D4D)),
