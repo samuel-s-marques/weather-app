@@ -314,10 +314,10 @@ class _HomePageState extends State<HomePage> {
           duration: const Duration(milliseconds: 500),
           snapSpec: const SnapSpec(
             snap: true,
-            initialSnap: 0.7,
+            initialSnap: 0.3,
             snappings: [
               0.3,
-              0.7,
+              0.9,
             ],
           ),
           scrollSpec: const ScrollSpec(
