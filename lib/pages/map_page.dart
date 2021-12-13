@@ -14,7 +14,7 @@ class MapPage extends StatefulWidget {
   _MapPageState createState() => _MapPageState();
 }
 
-class _MapPageState extends State<MapPage> {
+class _MapPageState extends State<MapPage> with TickerProviderStateMixin {
   MapController _mapController = MapController();
 
   @override
@@ -106,6 +106,35 @@ class _MapPageState extends State<MapPage> {
     );
   }
 
+  void _animatedMapMove(LatLng destLocation, double destZoom) {
+    final _latTween = Tween<double>(
+        begin: _mapController.center.latitude, end: destLocation.latitude);
+    final _lngTween = Tween<double>(
+        begin: _mapController.center.longitude, end: destLocation.longitude);
+    final _zoomTween = Tween<double>(begin: _mapController.zoom, end: destZoom);
+
+    var controller = AnimationController(
+        vsync: this, duration: const Duration(milliseconds: 500));
+    Animation<double> animation =
+        CurvedAnimation(parent: controller, curve: Curves.fastOutSlowIn);
+
+    controller.addListener(() {
+      _mapController.move(
+          LatLng(_latTween.evaluate(animation), _lngTween.evaluate(animation)),
+          _zoomTween.evaluate(animation));
+    });
+
+    animation.addStatusListener((status) {
+      if (status == AnimationStatus.completed) {
+        controller.dispose();
+      } else if (status == AnimationStatus.dismissed) {
+        controller.dispose();
+      }
+    });
+
+    controller.forward();
+  }
+
   Widget buildFabs() {
     return Align(
       alignment: AlignmentDirectional.bottomEnd,
@@ -118,9 +147,8 @@ class _MapPageState extends State<MapPage> {
               onPressed: () async {
                 Position _currentPosition = await GeoApi().determinePosition();
 
-                setState(() {
-                  _mapController.move(LatLng(_currentPosition.latitude, _currentPosition.longitude), 13.0);
-                });
+                _animatedMapMove(LatLng(_currentPosition.latitude,
+                    _currentPosition.longitude), 13.0);
               },
               backgroundColor: Colors.white,
               child: Icon(Icons.gps_fixed, color: Color(0xFF4D4D4D)),
