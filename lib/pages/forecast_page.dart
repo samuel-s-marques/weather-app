@@ -17,6 +17,7 @@ class ForecastPage extends StatefulWidget {
 
 class _ForecastPageState extends State<ForecastPage> {
   final ScrollController _scrollController = ScrollController();
+  var data = WeatherApi().getNextFiveDaysForecast("São Paulo");
 
   @override
   Widget build(BuildContext context) {
@@ -123,7 +124,7 @@ class _ForecastPageState extends State<ForecastPage> {
                     color: Colors.white,
                   );
                 },
-                future: WeatherApi().getNextFiveDaysForecast("São Paulo"),
+                future: data,
               ),
             ),
             Padding(
@@ -148,7 +149,7 @@ class _ForecastPageState extends State<ForecastPage> {
               ),
             ),
             FutureBuilder(
-              future: WeatherApi().getNextFiveDaysForecast("São Paulo"),
+              future: data,
               builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
                 if (snapshot.hasData) {
                   return Container(
