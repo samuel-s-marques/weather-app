@@ -1,10 +1,14 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
+import 'package:sliding_sheet/sliding_sheet.dart';
+import 'package:weather/weather.dart';
 import 'package:weather_icons/weather_icons.dart';
 import 'package:weatherapp/services/weather_api.dart';
+import 'package:weatherapp/widgets/card_info.dart';
 import '../utils/utils.dart';
 
 class HomePage extends StatefulWidget {
@@ -15,10 +19,12 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  SheetController controller = SheetController();
+  DateFormat dateFormatter = DateFormat("d MMMM", Platform.localeName);
+  var weatherData;
+
   @override
   Widget build(BuildContext context) {
-    DateFormat dateFormatter = DateFormat("d MMMM", Platform.localeName);
-
     return Container(
       decoration: const BoxDecoration(
         gradient: LinearGradient(
@@ -30,6 +36,7 @@ class _HomePageState extends State<HomePage> {
             ]),
       ),
       child: Scaffold(
+        resizeToAvoidBottomInset: false,
         backgroundColor: Colors.transparent,
         appBar: AppBar(
           backgroundColor: Colors.transparent,
@@ -65,8 +72,12 @@ class _HomePageState extends State<HomePage> {
             Padding(
               padding: const EdgeInsets.only(right: 10.0),
               child: IconButton(
-                onPressed: () {},
-                icon: Icon(Icons.notifications_none),
+                onPressed: () async {
+                  if (weatherData.toJson()!.isNotEmpty) {
+                    await showBottomSheetDialog(context, weatherData);
+                  }
+                },
+                icon: Icon(Icons.info),
               ),
             )
           ],
@@ -81,11 +92,13 @@ class _HomePageState extends State<HomePage> {
                       .toString()
                       .split(" ")[0]
                       .split(".")[0];
-                  var weatherDescription = snapshot.data!.weatherDescription.toString().capitalize();
+                  var weatherDescription =
+                      snapshot.data!.weatherDescription.toString().capitalize();
                   var windSpeed = snapshot.data!.windSpeed;
                   var humidity = snapshot.data!.humidity;
                   var dateTime = dateFormatter.format(snapshot.data!.date);
                   var weatherIcon = snapshot.data!.weatherIcon;
+                  weatherData = snapshot.data!;
 
                   return Column(
                     children: [
@@ -273,6 +286,114 @@ class _HomePageState extends State<HomePage> {
           ],
         ),
       ),
+    );
+  }
+
+  Future<void> showBottomSheetDialog(BuildContext context, Weather weatherData) async {
+    final controller = SheetController();
+    final theme = Theme.of(context);
+    final textTheme = theme.textTheme;
+
+    DateFormat hourFormatter = DateFormat("Hm", Platform.localeName);
+
+    var tempMax = weatherData.tempMax!.celsius!.floorToDouble();
+    var tempMin = weatherData.tempMin!.celsius!.floorToDouble();
+    var sunriseHour = hourFormatter.format(weatherData.sunrise!.toLocal());
+    var sunsetHour = hourFormatter.format(weatherData.sunset!.toLocal());
+    var windSpeed = weatherData.windSpeed;
+    var pressure = weatherData.pressure;
+    var humidity = weatherData.humidity;
+    var cloudiness = weatherData.cloudiness;
+
+    await showSlidingBottomSheet(
+      context,
+      builder: (context) {
+        return SlidingSheetDialog(
+          cornerRadius: 27,
+          controller: controller,
+          duration: const Duration(milliseconds: 500),
+          snapSpec: const SnapSpec(
+            snap: true,
+            initialSnap: 0.7,
+            snappings: [
+              0.3,
+              0.7,
+            ],
+          ),
+          scrollSpec: const ScrollSpec(
+            showScrollbar: true,
+          ),
+          maxWidth: 500,
+          minHeight: 350,
+          isDismissable: true,
+          dismissOnBackdropTap: true,
+          isBackdropInteractable: true,
+          onDismissPrevented: (backButton, backDrop) async {
+            HapticFeedback.heavyImpact();
+
+            if (backButton || backDrop) {
+              const duration = Duration(milliseconds: 300);
+              await controller.snapToExtent(0.2,
+                  duration: duration, clamp: false);
+              await controller.snapToExtent(0.4, duration: duration);
+              // or Navigator.pop(context);
+            }
+
+            // Or pop the route
+            // if (backButton) {
+            //   Navigator.pop(context);
+            // }
+
+            print('Dismiss prevented');
+          },
+          builder: (context, state) {
+            return Column(
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(20),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 18.0),
+                        child: Align(
+                          alignment: Alignment.topCenter,
+                          child: Container(
+                            height: 3,
+                            width: 30,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(2),
+                              color: Color(0xFF838BAA),
+                            ),
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 12.0, bottom: 11),
+                        child: Text('Info', style: textTheme.headline1),
+                      ),
+                      ListView(
+                        physics: ScrollPhysics(),
+                        shrinkWrap: true,
+                        children: ListTile.divideTiles(context: context, tiles: [
+                          CardInfo.name("Temperatura máxima", "$tempMax °C", WeatherIcons.thermometer, Colors.redAccent),
+                          CardInfo.name("Temperatura mínima", "$tempMin °C", WeatherIcons.thermometer_exterior, Colors.lightBlue),
+                          CardInfo.name("Nascer do Sol", sunriseHour, WeatherIcons.sunrise, Colors.orangeAccent),
+                          CardInfo.name("Pôr-do-Sol", sunsetHour, WeatherIcons.sunset, Colors.deepOrangeAccent),
+                          CardInfo.name("Vento", "$windSpeed m/s", WeatherIcons.strong_wind, Colors.grey),
+                          CardInfo.name("Pressão do ar", "$pressure Pa", WeatherIcons.barometer, Colors.lightBlueAccent),
+                          CardInfo.name("Humidade", "$humidity %", WeatherIcons.humidity, Colors.blueAccent),
+                          CardInfo.name("Nebulosidade", "$cloudiness %", WeatherIcons.fog, Colors.grey),
+                        ]).toList(),
+                      )
+                    ],
+                  ),
+                ),
+              ],
+            );
+          },
+        );
+      },
     );
   }
 }
