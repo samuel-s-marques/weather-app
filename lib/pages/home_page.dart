@@ -38,7 +38,7 @@ class _HomePageState extends State<HomePage> {
           title: Padding(
             padding: const EdgeInsets.only(left: 22),
             child: TextButton(
-              onPressed: () {},
+              onPressed: () => Navigator.pushNamed(context, "/map"),
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
@@ -90,7 +90,7 @@ class _HomePageState extends State<HomePage> {
                   return Column(
                     children: [
                       Padding(
-                        padding: const EdgeInsets.only(top: 10, bottom: 28),
+                        padding: const EdgeInsets.only(bottom: 20),
                         child: Center(
                           child: Image.network(
                             "http://openweathermap.org/img/wn/$weatherIcon@4x.png",
@@ -108,7 +108,7 @@ class _HomePageState extends State<HomePage> {
                             borderRadius: BorderRadius.circular(20),
                           ),
                           child: Padding(
-                            padding: const EdgeInsets.only(bottom: 26, top: 17),
+                            padding: const EdgeInsets.only(bottom: 26, top: 26),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
