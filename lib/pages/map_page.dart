@@ -94,11 +94,9 @@ class _MapPageState extends State<MapPage> with TickerProviderStateMixin {
     return FlutterMap(
       mapController: _mapController,
       options: MapOptions(
-          center: LatLng(51.5, -0.09),
-          zoom: 13.0,
-          onLongPress: (TapPosition, LatLng) {
-            print(LatLng);
-          }),
+        center: LatLng(51.5, -0.09),
+        zoom: 13.0,
+      ),
       layers: [
         TileLayerOptions(
           urlTemplate: "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
