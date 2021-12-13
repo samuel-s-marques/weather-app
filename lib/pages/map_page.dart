@@ -1,9 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:material_floating_search_bar/material_floating_search_bar.dart';
+import 'package:weatherapp/services/geo_api.dart';
 
 class MapPage extends StatefulWidget {
   const MapPage({Key? key}) : super(key: key);
@@ -13,6 +15,13 @@ class MapPage extends StatefulWidget {
 }
 
 class _MapPageState extends State<MapPage> {
+  MapController _mapController = MapController();
+
+  @override
+  void dispose() {
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -81,13 +90,9 @@ class _MapPageState extends State<MapPage> {
     );
   }
 
-  @override
-  void dispose() {
-    super.dispose();
-  }
-
   Widget buildMap() {
     return FlutterMap(
+      mapController: _mapController,
       options: MapOptions(
         center: LatLng(51.5, -0.09),
         zoom: 13.0,
@@ -110,7 +115,13 @@ class _MapPageState extends State<MapPage> {
           mainAxisSize: MainAxisSize.min,
           children: [
             FloatingActionButton(
-              onPressed: () {},
+              onPressed: () async {
+                Position _currentPosition = await GeoApi().determinePosition();
+
+                setState(() {
+                  _mapController.move(LatLng(_currentPosition.latitude, _currentPosition.longitude), 13.0);
+                });
+              },
               backgroundColor: Colors.white,
               child: Icon(Icons.gps_fixed, color: Color(0xFF4D4D4D)),
             ),
