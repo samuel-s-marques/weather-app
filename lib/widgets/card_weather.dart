@@ -41,8 +41,8 @@ class CardWeather extends StatelessWidget {
                   color: Colors.white,
                 ),
               ),
-              Image.asset(
-                "assets/images/$asset.png",
+              Image.network(
+                "http://openweathermap.org/img/wn/$asset@4x.png",
                 width: 46,
               ),
               Text(
