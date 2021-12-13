@@ -1,7 +1,9 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:latlong2/latlong.dart';
+import 'package:material_floating_search_bar/material_floating_search_bar.dart';
 
 class MapPage extends StatefulWidget {
   const MapPage({Key? key}) : super(key: key);
@@ -15,65 +17,106 @@ class _MapPageState extends State<MapPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Stack(children: [
-        FlutterMap(
-          options: MapOptions(
-            center: LatLng(51.5, -0.09),
-            zoom: 13.0,
+        buildMap(),
+        buildFloatingSearchBar(),
+        buildFabs(),
+      ]),
+    );
+  }
+
+  Widget buildFloatingSearchBar() {
+    final isPortrait =
+        MediaQuery.of(context).orientation == Orientation.portrait;
+
+    return Padding(
+      padding: const EdgeInsets.only(top: 30.0),
+      child: FloatingSearchBar(
+        queryStyle: GoogleFonts.getFont("Overpass",
+            fontSize: 18, color: Color(0xFF444E72)),
+        borderRadius: BorderRadius.circular(15),
+        hint: 'Search here',
+        hintStyle: GoogleFonts.getFont("Overpass",
+            fontSize: 18, color: Color(0xFF838BAA)),
+        scrollPadding: const EdgeInsets.only(top: 16, bottom: 56),
+        transitionDuration: const Duration(milliseconds: 800),
+        transitionCurve: Curves.easeInOut,
+        physics: const BouncingScrollPhysics(),
+        axisAlignment: isPortrait ? 0.0 : -1.0,
+        openAxisAlignment: 0.0,
+        width: isPortrait ? 600 : 500,
+        debounceDelay: const Duration(milliseconds: 500),
+        onQueryChanged: (query) {},
+        transition: CircularFloatingSearchBarTransition(),
+        actions: [
+          FloatingSearchBarAction(
+            showIfOpened: false,
+            child: CircularButton(
+              icon: const Icon(Icons.mic),
+              onPressed: () {},
+            ),
           ),
-          layers: [
-            TileLayerOptions(
-              urlTemplate: "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
-              subdomains: ['a', 'b', 'c'],
+          FloatingSearchBarAction.searchToClear(
+            showIfClosed: false,
+          ),
+        ],
+        builder: (context, transition) {
+          return ClipRRect(
+            borderRadius: BorderRadius.circular(8),
+            child: Material(
+              color: Colors.white,
+              elevation: 4.0,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: Colors.accents.map((color) {
+                  return Container(
+                    height: 112,
+                    color: color,
+                  );
+                }).toList(),
+              ),
+            ),
+          );
+        },
+      ),
+    );
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+  }
+
+  Widget buildMap() {
+    return FlutterMap(
+      options: MapOptions(
+        center: LatLng(51.5, -0.09),
+        zoom: 13.0,
+      ),
+      layers: [
+        TileLayerOptions(
+          urlTemplate: "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+          subdomains: ['a', 'b', 'c'],
+        ),
+      ],
+    );
+  }
+
+  Widget buildFabs() {
+    return Align(
+      alignment: AlignmentDirectional.bottomEnd,
+      child: Padding(
+        padding: EdgeInsetsDirectional.only(bottom: 16, end: 16),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            FloatingActionButton(
+              onPressed: () {},
+              backgroundColor: Colors.white,
+              child: Icon(Icons.gps_fixed, color: Color(0xFF4D4D4D)),
             ),
           ],
         ),
-        Padding(
-          padding: const EdgeInsets.only(top: 60.0, left: 30, right: 30),
-          child: Container(
-            width: double.infinity,
-            height: 60,
-            decoration: BoxDecoration(
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.grey.shade300
-                ),
-                BoxShadow(
-                  offset: Offset(0, -3),
-                  color: Colors.white,
-                  spreadRadius: -3.0,
-                  blurRadius: 6
-                )
-              ],
-              borderRadius: BorderRadius.circular(15)),
-            child: Padding(
-              padding: const EdgeInsets.only(top: 8),
-              child: TextField(
-                textCapitalization: TextCapitalization.words,
-                style: GoogleFonts.getFont("Overpass",
-                    fontSize: 18, color: Color(0xFF444E72)),
-                decoration: InputDecoration(
-                  prefixIcon: Padding(
-                    padding: const EdgeInsets.only(left: 16.0, right: 16),
-                    child: IconButton(
-                      onPressed: () => Navigator.pop(context),
-                      icon: Icon(
-                        Icons.arrow_back_sharp, color: Color(0xFF444E72),),),
-                  ),
-                  suffixIcon: Padding(
-                    padding: const EdgeInsets.only(right: 16.0),
-                    child: IconButton(onPressed: () {},
-                        icon: Icon(Icons.mic, color: Color(0xFF444E72),)),
-                  ),
-                  border: InputBorder.none,
-                  hintText: "Search here",
-                  hintStyle: GoogleFonts.getFont("Overpass",
-                      fontSize: 18, color: Color(0xFF838BAA)),
-                ),
-              ),
-            ),
-          ),
-        ),
-      ]),
+      ),
     );
   }
 }
