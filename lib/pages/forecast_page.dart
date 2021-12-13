@@ -7,6 +7,7 @@ import 'package:weather_icons/weather_icons.dart';
 import 'package:weatherapp/services/weather_api.dart';
 import 'package:weatherapp/widgets/card_forecast.dart';
 import 'package:weatherapp/widgets/card_weather.dart';
+import '../utils/utils.dart';
 
 class ForecastPage extends StatefulWidget {
   const ForecastPage({Key? key}) : super(key: key);
@@ -26,6 +27,7 @@ class _ForecastPageState extends State<ForecastPage> {
         DateFormat("MMM, d", Platform.localeName).format(now);
     DateFormat hourFormatter = DateFormat("Hm", Platform.localeName);
     DateFormat dayFormatter = DateFormat("MMM, d", Platform.localeName);
+    DateFormat weekDayFormatter = DateFormat("EEEE", Platform.localeName);
 
     return Container(
       decoration: const BoxDecoration(
@@ -170,8 +172,17 @@ class _ForecastPageState extends State<ForecastPage> {
                             shrinkWrap: true,
                             itemBuilder: (BuildContext context, int index) {
                               if (snapshot.hasData) {
-                                var day = dayFormatter
-                                    .format(snapshot.data[index]!.date);
+                                var now = DateTime.now();
+                                var today = DateTime(now.year, now.month, now.day);
+                                
+                                var day = weekDayFormatter.format(snapshot.data[index]!.date).split("-")[0].capitalize();
+
+                                if (today.difference(snapshot.data[index]!.date).inDays == 0) {
+                                  day = "Hoje";
+                                } else if (today.difference(snapshot.data[index]!.date).inDays == -1) {
+                                  day = "Amanhã";
+                                }
+
                                 var hour = hourFormatter.format(snapshot.data[index]!.date);
                                 var temperature = snapshot
                                     .data[index]!.temperature
@@ -180,6 +191,8 @@ class _ForecastPageState extends State<ForecastPage> {
                                     .split(".")[0];
                                 var weatherIcon =
                                     snapshot.data[index]!.weatherIcon;
+
+                                print(now.difference(snapshot.data[index]!.date).inDays);
 
                                 return CardForecast(
                                   day: day,
