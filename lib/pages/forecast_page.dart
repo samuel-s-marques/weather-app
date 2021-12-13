@@ -174,7 +174,7 @@ class _ForecastPageState extends State<ForecastPage> {
                               if (snapshot.hasData) {
                                 var now = DateTime.now();
                                 var today = DateTime(now.year, now.month, now.day);
-                                
+
                                 var day = weekDayFormatter.format(snapshot.data[index]!.date).split("-")[0].capitalize();
 
                                 if (today.difference(snapshot.data[index]!.date).inDays == 0) {
