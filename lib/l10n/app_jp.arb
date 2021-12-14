@@ -1,0 +1,20 @@
+{
+  "today": "今日",
+  "tomorrow": "明日",
+  "wind": "風",
+  "hum": "湿気",
+  "nextForecast": "次の天気予報",
+  "back": "戻る",
+  "searchHere": "検索",
+  "moreInfo": "詳報",
+  "maxTemp": "最高気温",
+  "minTemp": "最低気温",
+  "sunrise": "日の出",
+  "sunset": "日没",
+  "airPressure": "空圧",
+  "humidity": "湿気",
+  "cloudness": "曇り",
+  "forecastReport": "天気予報",
+  "gpsPermission": "GPSの許可が必要",
+  "tryAgain": "やり直す"
+}
