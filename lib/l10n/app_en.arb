@@ -1,0 +1,20 @@
+{
+  "today": "Today",
+  "tomorrow": "Tomorrow",
+  "wind": "Wind",
+  "hum": "Hum",
+  "nextForecast": "Next Forecast",
+  "back": "Back",
+  "searchHere": "Search here",
+  "moreInfo": "More Info",
+  "maxTemp": "Max temperature",
+  "minTemp": "Min temperature",
+  "sunrise": "Sunrise",
+  "sunset": "Sunset",
+  "airPressure": "Air pressure",
+  "humidity": "Humidity",
+  "cloudness": "Cloudness",
+  "forecastReport": "Forecast report",
+  "gpsPermission": "You need to allow GPS permissions to use this app.",
+  "tryAgain": "Try again"
+}
