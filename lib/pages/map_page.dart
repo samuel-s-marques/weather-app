@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:latlong2/latlong.dart';
@@ -43,7 +44,7 @@ class _MapPageState extends State<MapPage> with TickerProviderStateMixin {
         queryStyle: GoogleFonts.getFont("Overpass",
             fontSize: 18, color: Color(0xFF444E72)),
         borderRadius: BorderRadius.circular(15),
-        hint: 'Search here',
+        hint: AppLocalizations.of(context)!.searchHere,
         hintStyle: GoogleFonts.getFont("Overpass",
             fontSize: 18, color: Color(0xFF838BAA)),
         scrollPadding: const EdgeInsets.only(top: 16, bottom: 56),

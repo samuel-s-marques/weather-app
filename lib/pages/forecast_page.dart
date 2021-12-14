@@ -8,6 +8,7 @@ import 'package:weatherapp/services/weather_api.dart';
 import 'package:weatherapp/widgets/card_forecast.dart';
 import 'package:weatherapp/widgets/card_weather.dart';
 import '../utils/utils.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class ForecastPage extends StatefulWidget {
   const ForecastPage({Key? key}) : super(key: key);
@@ -26,7 +27,6 @@ class _ForecastPageState extends State<ForecastPage> {
     String formattedDate =
         DateFormat("MMM, d", Platform.localeName).format(now);
     DateFormat hourFormatter = DateFormat("Hm", Platform.localeName);
-    DateFormat dayFormatter = DateFormat("MMM, d", Platform.localeName);
     DateFormat weekDayFormatter = DateFormat("EEEE", Platform.localeName);
 
     return Container(
@@ -46,7 +46,7 @@ class _ForecastPageState extends State<ForecastPage> {
           elevation: 0.0,
           toolbarHeight: 120,
           title: Text(
-            "Back",
+            AppLocalizations.of(context)!.back,
             style: GoogleFonts.getFont("Overpass",
                 fontWeight: FontWeight.bold, fontSize: 22, color: Colors.white),
           ),
@@ -72,7 +72,7 @@ class _ForecastPageState extends State<ForecastPage> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    "Today",
+                    AppLocalizations.of(context)!.today,
                     style: GoogleFonts.getFont("Overpass",
                         fontSize: 24,
                         fontWeight: FontWeight.bold,
@@ -135,7 +135,7 @@ class _ForecastPageState extends State<ForecastPage> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    "Next Forecast",
+                    AppLocalizations.of(context)!.nextForecast,
                     style: GoogleFonts.getFont(
                       "Overpass",
                       fontSize: 23,
@@ -177,9 +177,9 @@ class _ForecastPageState extends State<ForecastPage> {
                                 var day = weekDayFormatter.format(snapshot.data[index]!.date).split("-")[0].capitalize();
 
                                 if (today.difference(snapshot.data[index]!.date).inDays == 0) {
-                                  day = "Hoje";
+                                  day = AppLocalizations.of(context)!.today;
                                 } else if (today.difference(snapshot.data[index]!.date).inDays == -1) {
-                                  day = "Amanhã";
+                                  day = AppLocalizations.of(context)!.tomorrow;
                                 }
 
                                 var hour = hourFormatter.format(snapshot.data[index]!.date);

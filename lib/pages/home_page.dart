@@ -13,6 +13,7 @@ import 'package:weatherapp/services/geo_api.dart';
 import 'package:weatherapp/services/weather_api.dart';
 import 'package:weatherapp/widgets/card_info.dart';
 import '../utils/utils.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -147,7 +148,7 @@ class _HomePageState extends State<HomePage> {
                                         CrossAxisAlignment.center,
                                     children: [
                                       Text(
-                                        "Today, $dateTime",
+                                        "${AppLocalizations.of(context)!.today}, $dateTime",
                                         style: GoogleFonts.getFont("Overpass",
                                             fontSize: 18, color: Colors.white),
                                       ),
@@ -192,7 +193,7 @@ class _HomePageState extends State<HomePage> {
                                             child: Column(
                                               children: [
                                                 Text(
-                                                  "Wind",
+                                                  AppLocalizations.of(context)!.wind,
                                                   style: GoogleFonts.getFont(
                                                     "Overpass",
                                                     fontSize: 18,
@@ -234,7 +235,7 @@ class _HomePageState extends State<HomePage> {
                                                 padding: const EdgeInsets.only(
                                                     left: 21.0, right: 23),
                                                 child: Text(
-                                                  "Hum",
+                                                  AppLocalizations.of(context)!.hum,
                                                   style: GoogleFonts.getFont(
                                                     "Overpass",
                                                     fontSize: 18,
@@ -276,7 +277,7 @@ class _HomePageState extends State<HomePage> {
                   Padding(
                     padding: const EdgeInsets.only(bottom: 34),
                     child: Container(
-                      width: 204,
+                      constraints: BoxConstraints(minWidth: 200, maxWidth: 220),
                       height: 60,
                       child: ElevatedButton(
                         onPressed: () =>
@@ -285,7 +286,7 @@ class _HomePageState extends State<HomePage> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Text(
-                              "Forecast report",
+                              "${AppLocalizations.of(context)!.forecastReport}",
                               style: GoogleFonts.getFont(
                                 "Overpass",
                                 fontSize: 17,
@@ -322,7 +323,7 @@ class _HomePageState extends State<HomePage> {
               children: [
                 Center(
                   child: Text(
-                    "You need to allow GPS permissions to use this app.",
+                    AppLocalizations.of(context)!.gpsPermission,
                     style: GoogleFonts.getFont("Overpass",
                         color: Colors.white,
                         fontWeight: FontWeight.w900,
@@ -338,7 +339,7 @@ class _HomePageState extends State<HomePage> {
                       await Geolocator.openLocationSettings();
                     },
                     child: Text(
-                      "Check again.",
+                      AppLocalizations.of(context)!.tryAgain,
                       style: GoogleFonts.getFont(
                         "Overpass",
                         color: Color(0xFF444E72),
@@ -403,15 +404,7 @@ class _HomePageState extends State<HomePage> {
               await controller.snapToExtent(0.2,
                   duration: duration, clamp: false);
               await controller.snapToExtent(0.4, duration: duration);
-              // or Navigator.pop(context);
             }
-
-            // Or pop the route
-            // if (backButton) {
-            //   Navigator.pop(context);
-            // }
-
-            print('Dismiss prevented');
           },
           builder: (context, state) {
             return Column(
@@ -437,31 +430,31 @@ class _HomePageState extends State<HomePage> {
                       ),
                       Padding(
                         padding: const EdgeInsets.only(top: 12.0, bottom: 11),
-                        child: Text('Info', style: textTheme.headline1),
+                        child: Text(AppLocalizations.of(context)!.moreInfo, style: textTheme.headline1),
                       ),
                       ListView(
                         physics: ScrollPhysics(),
                         shrinkWrap: true,
                         children:
                             ListTile.divideTiles(context: context, tiles: [
-                          CardInfo.name("Temperatura máxima", "$tempMax °C",
+                          CardInfo.name(AppLocalizations.of(context)!.maxTemp, "$tempMax °C",
                               WeatherIcons.thermometer, Colors.redAccent),
                           CardInfo.name(
-                              "Temperatura mínima",
+                              AppLocalizations.of(context)!.minTemp,
                               "$tempMin °C",
                               WeatherIcons.thermometer_exterior,
                               Colors.lightBlue),
-                          CardInfo.name("Nascer do Sol", sunriseHour,
+                          CardInfo.name(AppLocalizations.of(context)!.sunrise, sunriseHour,
                               WeatherIcons.sunrise, Colors.orangeAccent),
-                          CardInfo.name("Pôr-do-Sol", sunsetHour,
+                          CardInfo.name(AppLocalizations.of(context)!.sunset, sunsetHour,
                               WeatherIcons.sunset, Colors.deepOrangeAccent),
-                          CardInfo.name("Vento", "$windSpeed m/s",
+                          CardInfo.name(AppLocalizations.of(context)!.wind, "$windSpeed m/s",
                               WeatherIcons.strong_wind, Colors.grey),
-                          CardInfo.name("Pressão do ar", "$pressure Pa",
+                          CardInfo.name(AppLocalizations.of(context)!.airPressure, "$pressure Pa",
                               WeatherIcons.barometer, Colors.lightBlueAccent),
-                          CardInfo.name("Humidade", "$humidity %",
+                          CardInfo.name(AppLocalizations.of(context)!.humidity, "$humidity %",
                               WeatherIcons.humidity, Colors.blueAccent),
-                          CardInfo.name("Nebulosidade", "$cloudiness %",
+                          CardInfo.name(AppLocalizations.of(context)!.cloudness, "$cloudiness %",
                               WeatherIcons.fog, Colors.grey),
                         ]).toList(),
                       )
