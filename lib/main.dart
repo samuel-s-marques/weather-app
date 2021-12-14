@@ -1,16 +1,15 @@
-import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:intl/date_symbol_data_local.dart';
 import 'package:weatherapp/pages/forecast_page.dart';
 import 'package:weatherapp/pages/home_page.dart';
 import 'package:weatherapp/pages/map_page.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 Future main() async {
   await dotenv.load(fileName: ".env");
-  initializeDateFormatting(Platform.localeName, null)
-      .then((_) => runApp(const MyApp()));
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
@@ -21,6 +20,18 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'WeatherApp',
       debugShowCheckedModeBanner: false,
+      localizationsDelegates: [
+        AppLocalizations.delegate,
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
+      supportedLocales: [
+        Locale('pt', ''),
+        Locale('en', ''),
+        Locale('es', ''),
+        Locale('jp', ''),
+      ],
       theme: ThemeData(
         textTheme: TextTheme(
           headline1: GoogleFonts.getFont("Overpass",
