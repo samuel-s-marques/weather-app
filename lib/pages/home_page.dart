@@ -31,7 +31,7 @@ class _HomePageState extends State<HomePage> {
     List<Placemark> placemarks =
         await placemarkFromCoordinates(position.latitude, position.longitude);
 
-    return placemarks[0].administrativeArea;
+    return placemarks[0].subAdministrativeArea;
   }
 
   @override
@@ -62,7 +62,7 @@ class _HomePageState extends State<HomePage> {
                 title: Padding(
                   padding: const EdgeInsets.only(left: 22),
                   child: TextButton(
-                    onPressed: () => Navigator.pushNamed(context, "/map"),
+                    onPressed: () {},
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
@@ -73,16 +73,12 @@ class _HomePageState extends State<HomePage> {
                               fontSize: 22,
                               color: Colors.white),
                         ),
-                        Padding(
-                          padding: const EdgeInsets.only(left: 15.0),
-                          child: Icon(Icons.expand_more, color: Colors.white),
-                        )
                       ],
                     ),
                   ),
                 ),
                 leading: IconButton(
-                  onPressed: () {},
+                  onPressed: () => Navigator.pushNamed(context, "/map"),
                   icon: Icon(Icons.place_outlined),
                 ),
                 actions: [
