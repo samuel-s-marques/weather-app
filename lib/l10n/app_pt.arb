@@ -1,0 +1,20 @@
+{
+  "today": "Hoje",
+  "tomorrow": "Amanhã",
+  "wind": "Vento",
+  "hum": "Umi",
+  "nextForecast": "Próxima previsão",
+  "back": "Voltar",
+  "searchHere": "Pesquisar aqui",
+  "moreInfo": "Mais Informações",
+  "maxTemp": "Temperatura máxima",
+  "minTemp": "Temperatura mínima",
+  "sunrise": "Nascer do Sol",
+  "sunset": "Pôr-do-Sol",
+  "airPressure": "Pressão do ar",
+  "humidity": "Umidade",
+  "cloudness": "Nebulosidade",
+  "forecastReport": "Relatório de previsão",
+  "gpsPermission": "Você precisa permitir as permissões de GPS para usar este app.",
+  "tryAgain": "Tentar novamente"
+}
