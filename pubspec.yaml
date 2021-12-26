@@ -18,9 +18,12 @@ dependencies:
   weather_icons: ^3.0.0
   intl: ^0.17.0
   flutter_dotenv: ^5.0.2
-  flutter_map: ^0.14.0
   latlong2: ^0.8.1
   geocoding: ^2.0.1
+  google_maps_flutter: ^2.1.1
+  google_place: ^0.4.3
+  sqflite:
+  path:
   flutter_localizations: # Add this line
     sdk: flutter
 
