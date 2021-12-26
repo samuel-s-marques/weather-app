@@ -30,7 +30,7 @@ class MyApp extends StatelessWidget {
         Locale('pt', ''),
         Locale('en', ''),
         Locale('es', ''),
-        Locale('jp', ''),
+        Locale('ja', ''),
       ],
       theme: ThemeData(
         textTheme: TextTheme(
@@ -47,7 +47,7 @@ class MyApp extends StatelessWidget {
       home: HomePage(),
       routes: {
         "/details": (context) => const ForecastPage(),
-        "/map": (context) => const MapPage(),
+        "/map": (context) => MapPage(),
       },
     );
   }
