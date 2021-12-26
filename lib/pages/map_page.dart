@@ -13,15 +13,18 @@ import 'package:weatherapp/models/place.dart';
 import 'package:weatherapp/services/geo_api.dart';
 
 class MapPage extends StatefulWidget {
+  const MapPage({Key? key}) : super(key: key);
+
   @override
   _MapPageState createState() => _MapPageState();
 }
 
 class _MapPageState extends State<MapPage> with TickerProviderStateMixin {
-  Completer<GoogleMapController> _controller = Completer();
+  final Completer<GoogleMapController> _controller = Completer();
   FloatingSearchBarController controller = FloatingSearchBarController();
   List<Marker> customMarkers = [];
   List<AutocompletePrediction> _results = [];
+  bool _isLoading = false;
 
   @override
   void dispose() {
@@ -60,11 +63,12 @@ class _MapPageState extends State<MapPage> with TickerProviderStateMixin {
       child: FloatingSearchBar(
         controller: controller,
         queryStyle: GoogleFonts.getFont("Overpass",
-            fontSize: 18, color: Color(0xFF444E72)),
+            fontSize: 18, color: const Color(0xFF444E72)),
         borderRadius: BorderRadius.circular(15),
+        progress: _isLoading,
         hint: AppLocalizations.of(context)!.searchHere,
         hintStyle: GoogleFonts.getFont("Overpass",
-            fontSize: 18, color: Color(0xFF838BAA)),
+            fontSize: 18, color: const Color(0xFF838BAA)),
         scrollPadding: const EdgeInsets.only(top: 16, bottom: 56),
         transitionDuration: const Duration(milliseconds: 800),
         transitionCurve: Curves.easeInOut,
@@ -74,6 +78,12 @@ class _MapPageState extends State<MapPage> with TickerProviderStateMixin {
         width: isPortrait ? 600 : 500,
         debounceDelay: const Duration(milliseconds: 500),
         onQueryChanged: (query) async {
+          if (query.trim().isNotEmpty) {
+            setState(() {
+              _isLoading = true;
+            });
+          }
+
           var places = await googlePlace.autocomplete.get(query);
           _results = places!.predictions!;
 
@@ -84,7 +94,9 @@ class _MapPageState extends State<MapPage> with TickerProviderStateMixin {
             ));
           }
 
-          setState(() {});
+          setState(() {
+            _isLoading = false;
+          });
         },
         transition: CircularFloatingSearchBarTransition(),
         actions: [
@@ -108,7 +120,7 @@ class _MapPageState extends State<MapPage> with TickerProviderStateMixin {
               child: ListView.builder(
                 shrinkWrap: true,
                 itemCount:
-                    _results.length > 0 ? _results.length : places.length,
+                    _results.isNotEmpty ? _results.length : places.length,
                 itemBuilder: (BuildContext context, int index) {
                   return ListTile(
                     leading: _results.isNotEmpty
@@ -120,7 +132,9 @@ class _MapPageState extends State<MapPage> with TickerProviderStateMixin {
                               ? _results[index].placeId ?? ''
                               : places[index].placeId);
 
-                      goToLocation(placeDetails!.result!.geometry!.location!.lat, placeDetails.result!.geometry!.location!.lng);
+                      goToLocation(
+                          placeDetails!.result!.geometry!.location!.lat,
+                          placeDetails.result!.geometry!.location!.lng);
                       controller.close();
                     },
                     title: Text(
@@ -142,7 +156,7 @@ class _MapPageState extends State<MapPage> with TickerProviderStateMixin {
   }
 
   Widget buildMap() {
-    final CameraPosition _kGooglePlex = CameraPosition(
+    const CameraPosition _kGooglePlex = CameraPosition(
       target: LatLng(37.42796133580664, -122.085749655962),
       zoom: 14.4746,
     );
