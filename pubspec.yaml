@@ -24,6 +24,7 @@ dependencies:
   google_place: ^0.4.3
   sqflite:
   path:
+  dropdown_search: ^2.0.1
   flutter_localizations: # Add this line
     sdk: flutter
 
