@@ -230,9 +230,11 @@ class _MapPageState extends State<MapPage> with TickerProviderStateMixin {
   }
 
   Future<void> _goToMyPosition() async {
+    controller.close();
+
     Position _currentPosition = await GeoApi().determinePosition();
-    final GoogleMapController controller = await _controller.future;
-    controller.animateCamera(
+    final GoogleMapController mapController = await _controller.future;
+    mapController.animateCamera(
       CameraUpdate.newCameraPosition(
         CameraPosition(
           bearing: 0,
