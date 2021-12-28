@@ -37,15 +37,16 @@ class _MapPageState extends State<MapPage> with TickerProviderStateMixin {
       body: Stack(children: [
         buildMap(),
         FutureBuilder(
-          future: WeatherDatabase().findAll(),
+          future: Future.wait([
+            WeatherDatabase().findAllRecentSearches(),
+            WeatherDatabase().findAllFavoritePlaces()
+          ]),
           builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
             if (snapshot.hasData) {
-              List<Place> places = snapshot.data;
-
-              return buildFloatingSearchBar(places);
+              return buildFloatingSearchBar(snapshot.data);
             }
 
-            return buildFloatingSearchBar([]);
+            return const CircularProgressIndicator();
           },
         ),
         buildFabs(),
@@ -53,10 +54,13 @@ class _MapPageState extends State<MapPage> with TickerProviderStateMixin {
     );
   }
 
-  Widget buildFloatingSearchBar(List<Place> places) {
+  Widget buildFloatingSearchBar(List<List<Place>> placeList) {
     final isPortrait =
         MediaQuery.of(context).orientation == Orientation.portrait;
     var googlePlace = GooglePlace(dotenv.get('GOOGLE_PLACE_API_KEY'));
+
+    List<Place> favoritePlaces = placeList[1];
+    List<Place> recentPlaces = placeList[0];
 
     return Padding(
       padding: const EdgeInsets.only(top: 30.0),
@@ -88,7 +92,7 @@ class _MapPageState extends State<MapPage> with TickerProviderStateMixin {
           _results = places!.predictions!;
 
           for (var result in _results) {
-            WeatherDatabase().save(Place(
+            WeatherDatabase().saveRecentSearch(Place(
               placeId: result.placeId ?? '',
               placeDescription: result.description ?? '',
             ));
@@ -117,36 +121,87 @@ class _MapPageState extends State<MapPage> with TickerProviderStateMixin {
             child: Material(
               color: Colors.white,
               elevation: 4.0,
-              child: ListView.builder(
-                shrinkWrap: true,
-                itemCount:
-                    _results.isNotEmpty ? _results.length : places.length,
-                itemBuilder: (BuildContext context, int index) {
-                  return ListTile(
-                    leading: _results.isNotEmpty
-                        ? const Icon(Icons.place_outlined)
-                        : const Icon(Icons.history_outlined),
-                    onTap: () async {
-                      var placeDetails = await googlePlace.details.get(
-                          _results.isNotEmpty
-                              ? _results[index].placeId ?? ''
-                              : places[index].placeId);
+              child: Column(
+                children: [
+                  ListView.builder(
+                    shrinkWrap: true,
+                    itemCount: _results.isNotEmpty
+                        ? _results.length
+                        : recentPlaces.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      return ListTile(
+                        leading: _results.isNotEmpty
+                            ? const Icon(Icons.place_outlined)
+                            : const Icon(Icons.history_outlined),
+                        onTap: () async {
+                          var placeDetails = await googlePlace.details.get(
+                              _results.isNotEmpty
+                                  ? _results[index].placeId ?? ''
+                                  : recentPlaces[index].placeId);
 
-                      goToLocation(
-                          placeDetails!.result!.geometry!.location!.lat,
-                          placeDetails.result!.geometry!.location!.lng);
-                      controller.close();
+                          WeatherDatabase().saveFavoritePlace(Place(
+                              placeId: _results.isNotEmpty
+                                  ? _results[index].placeId ?? ''
+                                  : recentPlaces[index].placeId,
+                              placeDescription:
+                                  placeDetails!.result!.name ?? ''));
+
+                          goToLocation(
+                            placeDetails.result!.geometry!.location!.lat,
+                            placeDetails.result!.geometry!.location!.lng,
+                          );
+                          controller.close();
+                        },
+                        title: Text(
+                          "${_results.isNotEmpty ? _results[index].description : recentPlaces[index].placeDescription}",
+                          style: GoogleFonts.getFont(
+                            "Overpass",
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      );
                     },
-                    title: Text(
-                      "${_results.isNotEmpty ? _results[index].description : places[index].placeDescription}",
-                      style: GoogleFonts.getFont(
-                        "Overpass",
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  );
-                },
+                  ),
+                  const Divider(),
+                  ListView.builder(
+                    shrinkWrap: true,
+                    itemCount: favoritePlaces.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      return ListTile(
+                        dense: true,
+                        leading: const Icon(Icons.star),
+                        onTap: () async {
+                          var placeDetails = await googlePlace.details
+                              .get(favoritePlaces[index].placeId);
+
+                          goToLocation(
+                            placeDetails!.result!.geometry!.location!.lat,
+                            placeDetails.result!.geometry!.location!.lng,
+                          );
+                          controller.close();
+                        },
+                        title: Text(
+                          favoritePlaces[index].placeDescription,
+                          style: GoogleFonts.getFont(
+                            "Overpass",
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        trailing: IconButton(
+                            onPressed: () async {
+                              WeatherDatabase().deleteWhere(
+                                favoritePlaces[index].placeId,
+                                'favoritePlaces',
+                              );
+                              setState(() {});
+                            },
+                            icon: const Icon(Icons.delete_outline)),
+                      );
+                    },
+                  ),
+                ],
               ),
             ),
           );
@@ -205,14 +260,14 @@ class _MapPageState extends State<MapPage> with TickerProviderStateMixin {
     return Align(
       alignment: AlignmentDirectional.bottomEnd,
       child: Padding(
-        padding: EdgeInsetsDirectional.only(bottom: 16, end: 16),
+        padding: const EdgeInsetsDirectional.only(bottom: 16, end: 16),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             FloatingActionButton(
               onPressed: _goToMyPosition,
               backgroundColor: Colors.white,
-              child: Icon(Icons.gps_fixed, color: Color(0xFF4D4D4D)),
+              child: const Icon(Icons.gps_fixed, color: Color(0xFF4D4D4D)),
             ),
           ],
         ),
