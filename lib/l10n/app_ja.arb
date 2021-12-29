@@ -16,5 +16,6 @@
   "cloudness": "曇り",
   "forecastReport": "天気予報",
   "gpsPermission": "GPSの許可が必要",
-  "tryAgain": "やり直す"
+  "tryAgain": "やり直す",
+  "noData": "データなし。"
 }
