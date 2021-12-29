@@ -15,6 +15,7 @@ Weather App is an Android-only application, built with Flutter, as a study of Fl
 - [weather-app](#weather-app)
   - [Table of Contents](#table-of-contents)
   - [Features](#features)
+  - [To-Do](#to-do)
   - [Directory Structure](#directory-structure)
   - [My process](#my-process)
     - [Built with](#built-with)
@@ -33,7 +34,7 @@ Weather App is an Android-only application, built with Flutter, as a study of Fl
 - [x] Multi-language (JA, PT, EN, ES)
 
 
-## ToDo
+## To-Do
 - [ ] Implement Hive
 - [ ] Implement search by speech
 
