@@ -16,5 +16,6 @@
   "cloudness": "Nubosidad",
   "forecastReport": "Informe de previsión",
   "gpsPermission": "Tienes que permitir los permisos del GPS para utilizar esta aplicación.",
-  "tryAgain": "Vuelve a intentarlo"
+  "tryAgain": "Vuelve a intentarlo",
+  "noData": "Datos no encontrados."
 }

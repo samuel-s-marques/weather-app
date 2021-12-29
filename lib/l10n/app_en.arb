@@ -16,5 +16,6 @@
   "cloudness": "Cloudness",
   "forecastReport": "Forecast report",
   "gpsPermission": "You need to allow GPS permissions to use this app.",
-  "tryAgain": "Try again"
+  "tryAgain": "Try again",
+  "noData": "No data found."
 }
