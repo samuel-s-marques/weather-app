@@ -9,6 +9,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 Future main() async {
   await dotenv.load(fileName: ".env");
+
   runApp(const MyApp());
 }
 
@@ -20,14 +21,13 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'WeatherApp',
       debugShowCheckedModeBanner: false,
-      localizationsDelegates: [
+      localizationsDelegates: const [
         AppLocalizations.delegate,
         GlobalMaterialLocalizations.delegate,
         GlobalWidgetsLocalizations.delegate,
         GlobalCupertinoLocalizations.delegate,
       ],
-      supportedLocales: [
-        Locale('pt', ''),
+      supportedLocales: const [
         Locale('en', ''),
         Locale('es', ''),
         Locale('ja', ''),
@@ -37,17 +37,17 @@ class MyApp extends StatelessWidget {
           headline1: GoogleFonts.getFont("Overpass",
               fontSize: 25,
               fontWeight: FontWeight.w900,
-              color: Color(0xFF444E72)),
+              color: const Color(0xFF444E72)),
           headline2: GoogleFonts.getFont("Overpass",
               fontSize: 17,
               fontWeight: FontWeight.w900,
-              color: Color(0xFF444E72)),
+              color: const Color(0xFF444E72)),
         ),
       ),
-      home: HomePage(),
+      home: const HomePage(),
       routes: {
         "/details": (context) => const ForecastPage(),
-        "/map": (context) => MapPage(),
+        "/map": (context) => const MapPage(),
       },
     );
   }
