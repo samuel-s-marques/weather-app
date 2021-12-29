@@ -121,87 +121,123 @@ class _MapPageState extends State<MapPage> with TickerProviderStateMixin {
             child: Material(
               color: Colors.white,
               elevation: 4.0,
-              child: Column(
-                children: [
-                  ListView.builder(
-                    shrinkWrap: true,
-                    itemCount: _results.isNotEmpty
-                        ? _results.length
-                        : recentPlaces.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      return ListTile(
-                        leading: _results.isNotEmpty
-                            ? const Icon(Icons.place_outlined)
-                            : const Icon(Icons.history_outlined),
-                        onTap: () async {
-                          var placeDetails = await googlePlace.details.get(
-                              _results.isNotEmpty
-                                  ? _results[index].placeId ?? ''
-                                  : recentPlaces[index].placeId);
-
-                          WeatherDatabase().saveFavoritePlace(Place(
-                              placeId: _results.isNotEmpty
-                                  ? _results[index].placeId ?? ''
-                                  : recentPlaces[index].placeId,
-                              placeDescription:
-                                  placeDetails!.result!.name ?? ''));
-
-                          goToLocation(
-                            placeDetails.result!.geometry!.location!.lat,
-                            placeDetails.result!.geometry!.location!.lng,
-                          );
-                          controller.close();
-                        },
-                        title: Text(
-                          "${_results.isNotEmpty ? _results[index].description : recentPlaces[index].placeDescription}",
-                          style: GoogleFonts.getFont(
-                            "Overpass",
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
+              child: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(top: 30.0, left: 30),
+                          child: Text(
+                            "Recent search",
+                            style: GoogleFonts.getFont(
+                              "Overpass",
+                              fontSize: 17,
+                              fontWeight: FontWeight.bold,
+                              color: const Color(0xFF444E72),
+                            ),
                           ),
                         ),
-                      );
-                    },
-                  ),
-                  const Divider(),
-                  ListView.builder(
-                    shrinkWrap: true,
-                    itemCount: favoritePlaces.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      return ListTile(
-                        dense: true,
-                        leading: const Icon(Icons.star),
-                        onTap: () async {
-                          var placeDetails = await googlePlace.details
-                              .get(favoritePlaces[index].placeId);
+                      ],
+                    ),
+                    ListView.builder(
+                      shrinkWrap: true,
+                      itemCount: _results.isNotEmpty
+                          ? _results.length
+                          : recentPlaces.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        return ListTile(
+                          leading: _results.isNotEmpty
+                              ? const Icon(Icons.place_outlined)
+                              : const Icon(Icons.history_outlined),
+                          onTap: () async {
+                            var placeDetails = await googlePlace.details.get(
+                                _results.isNotEmpty
+                                    ? _results[index].placeId ?? ''
+                                    : recentPlaces[index].placeId);
 
-                          goToLocation(
-                            placeDetails!.result!.geometry!.location!.lat,
-                            placeDetails.result!.geometry!.location!.lng,
-                          );
-                          controller.close();
-                        },
-                        title: Text(
-                          favoritePlaces[index].placeDescription,
-                          style: GoogleFonts.getFont(
-                            "Overpass",
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
+                            WeatherDatabase().saveFavoritePlace(Place(
+                                placeId: _results.isNotEmpty
+                                    ? _results[index].placeId ?? ''
+                                    : recentPlaces[index].placeId,
+                                placeDescription:
+                                    placeDetails!.result!.name ?? ''));
+
+                            goToLocation(
+                              placeDetails.result!.geometry!.location!.lat,
+                              placeDetails.result!.geometry!.location!.lng,
+                            );
+                            controller.close();
+                          },
+                          title: Text(
+                            "${_results.isNotEmpty ? _results[index].description : recentPlaces[index].placeDescription}",
+                            style: GoogleFonts.getFont(
+                              "Overpass",
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                    const Divider(),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(top: 30.0, left: 30),
+                          child: Text(
+                            "Favorite place",
+                            style: GoogleFonts.getFont(
+                              "Overpass",
+                              fontSize: 17,
+                              fontWeight: FontWeight.bold,
+                              color: const Color(0xFF444E72),
+                            ),
                           ),
                         ),
-                        trailing: IconButton(
-                            onPressed: () async {
-                              WeatherDatabase().deleteWhere(
-                                favoritePlaces[index].placeId,
-                                'favoritePlaces',
-                              );
-                              setState(() {});
-                            },
-                            icon: const Icon(Icons.delete_outline)),
-                      );
-                    },
-                  ),
-                ],
+                      ],
+                    ),
+                    ListView.builder(
+                      shrinkWrap: true,
+                      itemCount: favoritePlaces.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        return ListTile(
+                          dense: true,
+                          leading: const Icon(Icons.star),
+                          onTap: () async {
+                            var placeDetails = await googlePlace.details
+                                .get(favoritePlaces[index].placeId);
+
+                            goToLocation(
+                              placeDetails!.result!.geometry!.location!.lat,
+                              placeDetails.result!.geometry!.location!.lng,
+                            );
+                            controller.close();
+                          },
+                          title: Text(
+                            favoritePlaces[index].placeDescription,
+                            style: GoogleFonts.getFont(
+                              "Overpass",
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          trailing: IconButton(
+                              onPressed: () async {
+                                WeatherDatabase().deleteWhere(
+                                  favoritePlaces[index].placeId,
+                                  'favoritePlaces',
+                                );
+                                setState(() {});
+                              },
+                              icon: const Icon(Icons.delete_outline)),
+                        );
+                      },
+                    ),
+                  ],
+                ),
               ),
             ),
           );
