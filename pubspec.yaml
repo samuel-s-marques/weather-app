@@ -25,6 +25,7 @@ dependencies:
   sqflite:
   path:
   dropdown_search: ^2.0.1
+  sizer: ^2.0.15
   flutter_localizations: # Add this line
     sdk: flutter
 
