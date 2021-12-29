@@ -30,7 +30,7 @@ Weather App is an Android-only application, built with Flutter, as a study of Fl
 - [x] Find place by text
 - [ ] Find place by voice
 - [x] Get data directly from OpenWeatherMap API
-
+- [x] Multi-language (JA, PT, EN, ES)
 
 ## Directory Structure
 ```
