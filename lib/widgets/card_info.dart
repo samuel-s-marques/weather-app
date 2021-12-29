@@ -26,10 +26,21 @@ class CardInfo extends StatelessWidget {
               children: [
                 Text(
                   title,
-                  style: GoogleFonts.getFont("Overpass",
-                      fontSize: 16, color: Color(0xFF838BAA)),
+                  style: GoogleFonts.getFont(
+                    "Overpass",
+                    fontSize: 16,
+                    color: const Color(0xFF838BAA),
+                  ),
                 ),
-                Text(data, style: GoogleFonts.getFont("Overpass", fontSize: 16, color: Color(0xFF444E72), fontWeight: FontWeight.bold),)
+                Text(
+                  data,
+                  style: GoogleFonts.getFont(
+                    "Overpass",
+                    fontSize: 16,
+                    color: const Color(0xFF444E72),
+                    fontWeight: FontWeight.bold,
+                  ),
+                )
               ],
             )
           ],
