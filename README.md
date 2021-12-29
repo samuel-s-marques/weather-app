@@ -32,6 +32,11 @@ Weather App is an Android-only application, built with Flutter, as a study of Fl
 - [x] Get data directly from OpenWeatherMap API
 - [x] Multi-language (JA, PT, EN, ES)
 
+
+## ToDo
+- [ ] Implement Hive
+- [ ] Implement search by speech
+
 ## Directory Structure
 ```
 lib/
