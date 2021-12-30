@@ -22,22 +22,27 @@ class CardForecast extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Column(children: [
-            Text(
-              day,
-              style: GoogleFonts.getFont("Overpass",
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white),
-            ),
-            Text(
-              hour,
-              style: GoogleFonts.getFont("Overpass",
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white),
-            ),
-          ],),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                day,
+                style: GoogleFonts.getFont("Overpass",
+                    fontSize: MediaQuery.of(context).size.width * 0.04,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white),
+                textAlign: TextAlign.left,
+              ),
+              Text(
+                hour,
+                style: GoogleFonts.getFont("Overpass",
+                    fontSize: MediaQuery.of(context).size.width * 0.04,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white),
+                textAlign: TextAlign.left,
+              ),
+            ],
+          ),
           Image.network(
             "http://openweathermap.org/img/wn/$asset@4x.png",
             width: 50,
@@ -46,7 +51,7 @@ class CardForecast extends StatelessWidget {
             "$temperature°",
             style: GoogleFonts.getFont(
               "Overpass",
-              fontSize: 18,
+              fontSize: MediaQuery.of(context).size.width * 0.04,
               fontWeight: FontWeight.normal,
               color: Colors.white,
             ),
