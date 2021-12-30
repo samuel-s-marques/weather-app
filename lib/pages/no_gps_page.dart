@@ -8,39 +8,50 @@ class NoGpsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.transparent,
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Center(
-            child: Text(
-              AppLocalizations.of(context)!.gpsPermission,
-              style: GoogleFonts.getFont("Overpass",
-                  color: Colors.white,
-                  fontWeight: FontWeight.w900,
-                  fontSize: 28),
-              textAlign: TextAlign.center,
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(top: 30.0),
-            child: ElevatedButton(
-              onPressed: () async {
-                await Geolocator.openAppSettings();
-                await Geolocator.openLocationSettings();
-              },
+    return Container(
+      decoration: const BoxDecoration(
+        gradient: LinearGradient(
+            begin: Alignment.topRight,
+            end: Alignment.bottomLeft,
+            colors: [
+              Color(0xFF47BFDF),
+              Color(0xFF4A91FF),
+            ]),
+      ),
+      child: Scaffold(
+        backgroundColor: Colors.transparent,
+        body: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Center(
               child: Text(
-                AppLocalizations.of(context)!.tryAgain,
-                style: GoogleFonts.getFont(
-                  "Overpass",
-                  color: const Color(0xFF444E72),
-                ),
+                AppLocalizations.of(context)!.gpsPermission,
+                style: GoogleFonts.getFont("Overpass",
+                    color: Colors.white,
+                    fontWeight: FontWeight.w900,
+                    fontSize: 28),
+                textAlign: TextAlign.center,
               ),
-              style: ElevatedButton.styleFrom(primary: Colors.white),
             ),
-          )
-        ],
+            Padding(
+              padding: const EdgeInsets.only(top: 30.0),
+              child: ElevatedButton(
+                onPressed: () async {
+                  await Geolocator.openAppSettings();
+                  await Geolocator.openLocationSettings();
+                },
+                child: Text(
+                  AppLocalizations.of(context)!.tryAgain,
+                  style: GoogleFonts.getFont(
+                    "Overpass",
+                    color: const Color(0xFF444E72),
+                  ),
+                ),
+                style: ElevatedButton.styleFrom(primary: Colors.white),
+              ),
+            )
+          ],
+        ),
       ),
     );
   }
