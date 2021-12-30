@@ -6,6 +6,10 @@ if (localPropertiesFile.exists()) {
     }
 }
 
+def localPropertyApiToken = localProperties.getProperty('MAPS_API_KEY')
+def systemEnvApiToken = System.getenv('MAPS_API_KEY')
+def MAPS_API_KEY = localPropertyApiToken != null ? localPropertyApiToken : systemEnvApiToken
+
 def flutterRoot = localProperties.getProperty('flutter.sdk')
 if (flutterRoot == null) {
     throw new GradleException("Flutter SDK not found. Define location with flutter.sdk in the local.properties file.")
@@ -48,6 +52,7 @@ android {
         targetSdkVersion 30
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
+        manifestPlaceholders = [MAPS_API_KEY: MAPS_API_KEY]
     }
 
     buildTypes {
