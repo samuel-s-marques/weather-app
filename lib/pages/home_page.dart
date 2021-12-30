@@ -1,19 +1,26 @@
 import 'dart:io';
 
+import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sliding_sheet/sliding_sheet.dart';
 import 'package:weather/weather.dart';
 import 'package:weather_icons/weather_icons.dart';
+import 'package:weatherapp/database/database.dart';
+import 'package:weatherapp/models/details_arguments.dart';
+import 'package:weatherapp/models/place.dart';
+import 'package:weatherapp/pages/no_gps_page.dart';
 import 'package:weatherapp/services/geo_api.dart';
 import 'package:weatherapp/services/weather_api.dart';
 import 'package:weatherapp/widgets/card_info.dart';
 import '../utils/utils.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:sizer/sizer.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -24,15 +31,20 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   SheetController controller = SheetController();
-  DateFormat dateFormatter = DateFormat("d MMMM", Platform.localeName);
   var weatherData;
 
-  Future<String?> getData() async {
+  Future<String?> getCurrentLocation() async {
     Position position = await GeoApi().determinePosition();
     List<Placemark> placemarks =
         await placemarkFromCoordinates(position.latitude, position.longitude);
 
     return placemarks[0].subAdministrativeArea;
+  }
+
+  Future<SharedPreferences> getPrefs() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    return prefs;
   }
 
   @override
@@ -48,10 +60,24 @@ class _HomePageState extends State<HomePage> {
             ]),
       ),
       child: FutureBuilder(
-        future: getData(),
+        future: Future.wait(
+            [getCurrentLocation(), WeatherDatabase().findAllFavoritePlaces(), getPrefs()]),
         builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
           if (snapshot.hasData) {
-            String location = snapshot.data!;
+            String currentLocation = snapshot.data[0];
+            List<Place> places = snapshot.data[1];
+            SharedPreferences prefs = snapshot.data[2];
+
+            Locale currentLocale = Localizations.localeOf(context);
+            String currentLanguageCode = currentLocale.languageCode;
+            DateFormat dateFormatter = DateFormat("d MMMM", currentLanguageCode);
+
+            List<String> placesNames =
+            places.map((place) => place.placeDescription).toList();
+            placesNames.add(currentLocation);
+            placesNames.add(prefs.getString('selectedPlace') ?? currentLocation);
+            placesNames = placesNames.toSet().toList();
+            String selectedPlace = prefs.getString('selectedPlace') ?? currentLocation;
 
             return Scaffold(
               resizeToAvoidBottomInset: false,
@@ -59,28 +85,75 @@ class _HomePageState extends State<HomePage> {
               appBar: AppBar(
                 backgroundColor: Colors.transparent,
                 elevation: 0.0,
-                toolbarHeight: 120,
-                title: Padding(
-                  padding: const EdgeInsets.only(left: 22),
-                  child: TextButton(
-                    onPressed: () {},
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Text(
-                          location,
-                          style: GoogleFonts.getFont("Overpass",
-                              fontWeight: FontWeight.bold,
-                              fontSize: 22,
-                              color: Colors.white),
-                        ),
-                      ],
+                toolbarHeight: 110,
+                title: DropdownSearch<String>(
+                  showSearchBox: true,
+                  dropdownSearchDecoration: InputDecoration(
+                    hintStyle: GoogleFonts.getFont(
+                      "Overpass",
+                      fontWeight: FontWeight.bold,
+                      fontSize: MediaQuery.of(context).size.width * 0.5,
+                      color: Colors.white,
                     ),
+                    border: InputBorder.none,
                   ),
+                  dropDownButton: const Icon(Icons.keyboard_arrow_down_outlined),
+                  emptyBuilder: (context, text) {
+                    text = AppLocalizations.of(context)!.noData;
+
+                    return Center(
+                      child: Text(
+                        text,
+                        style: GoogleFonts.getFont(
+                          "Overpass",
+                          color: const Color(0xFF838BAA),
+                        ),
+                      ),
+                    );
+                  },
+                  dropdownBuilder: (context, selectedItem) {
+                    return ListTile(
+                      dense: true,
+                      title: Text(
+                        selectedItem!,
+                        style: GoogleFonts.getFont(
+                          "Overpass",
+                          fontWeight: FontWeight.bold,
+                          fontSize: MediaQuery.of(context).size.width * 0.045,
+                          color: Colors.white,
+                        ),
+                      ),
+                    );
+                  },
+                  popupItemBuilder:
+                      (BuildContext context, String item, bool isSelected) {
+                    return ListTile(
+                      title: Text(
+                        item,
+                        style: GoogleFonts.getFont(
+                          "Overpass",
+                          fontWeight: FontWeight.bold,
+                          fontSize: MediaQuery.of(context).size.width * 0.04,
+                          color: const Color(0xFF444E72),
+                        ),
+                      ),
+                    );
+                  },
+                  mode: Mode.DIALOG,
+                  showSelectedItems: true,
+                  items: placesNames,
+                  onChanged: (String? place) async {
+                    setState(() {
+                      selectedPlace = place!;
+                    });
+
+                    await prefs.setString('selectedPlace', selectedPlace);
+                  },
+                  selectedItem: selectedPlace,
                 ),
                 leading: IconButton(
                   onPressed: () => Navigator.pushNamed(context, "/map"),
-                  icon: Icon(Icons.place_outlined),
+                  icon: const Icon(Icons.place_outlined),
                 ),
                 actions: [
                   Padding(
@@ -91,7 +164,7 @@ class _HomePageState extends State<HomePage> {
                           await showBottomSheetDialog(context, weatherData);
                         }
                       },
-                      icon: Icon(Icons.info),
+                      icon: const Icon(Icons.info),
                     ),
                   )
                 ],
@@ -99,88 +172,80 @@ class _HomePageState extends State<HomePage> {
               body: Column(
                 children: [
                   FutureBuilder(
-                    future: WeatherApi().getCurrentWeather("São Paulo"),
-                    builder: (BuildContext context,
-                        AsyncSnapshot<dynamic> snapshot) {
+                    future: WeatherApi().getCurrentWeather(selectedPlace, context),
+                    builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
                       if (snapshot.hasData) {
-                        var temperature = snapshot.data!.temperature
+                        String temperature = snapshot.data!.temperature
                             .toString()
                             .split(" ")[0]
                             .split(".")[0];
-                        var weatherDescription = snapshot
-                            .data!.weatherDescription
-                            .toString()
-                            .capitalize();
-                        var windSpeed = snapshot.data!.windSpeed;
-                        var humidity = snapshot.data!.humidity;
-                        var dateTime =
-                            dateFormatter.format(snapshot.data!.date);
-                        var weatherIcon = snapshot.data!.weatherIcon;
+                        String weatherDescription =
+                        snapshot.data!.weatherDescription.toString().capitalize();
+                        double? windSpeed = snapshot.data!.windSpeed;
+                        double? humidity = snapshot.data!.humidity;
+                        String dateTime = dateFormatter.format(snapshot.data!.date);
+                        String weatherIcon = snapshot.data!.weatherIcon;
                         weatherData = snapshot.data!;
 
                         return Column(
                           children: [
-                            Padding(
-                              padding: const EdgeInsets.only(bottom: 20),
-                              child: Center(
-                                child: Image.network(
-                                  "http://openweathermap.org/img/wn/$weatherIcon@4x.png",
-                                  width: 171,
-                                ),
+                            Center(
+                              child: Image.network(
+                                "http://openweathermap.org/img/wn/$weatherIcon@4x.png",
+                                fit: BoxFit.contain,
                               ),
                             ),
                             Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 30),
+                              padding: const EdgeInsets.symmetric(horizontal: 30),
                               child: Card(
                                 color: Colors.white.withOpacity(0.2),
                                 elevation: 0,
                                 shape: RoundedRectangleBorder(
-                                  side: BorderSide(
+                                  side: const BorderSide(
                                       color: Colors.white, width: 1.85),
                                   borderRadius: BorderRadius.circular(20),
                                 ),
                                 child: Padding(
-                                  padding: const EdgeInsets.only(
-                                      bottom: 26, top: 26),
+                                  padding: const EdgeInsets.only(bottom: 26, top: 26),
                                   child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
+                                    crossAxisAlignment: CrossAxisAlignment.center,
                                     children: [
                                       Text(
                                         "${AppLocalizations.of(context)!.today}, $dateTime",
-                                        style: GoogleFonts.getFont("Overpass",
-                                            fontSize: 18, color: Colors.white),
-                                      ),
-                                      Padding(
-                                        padding:
-                                            const EdgeInsets.only(top: 12.0),
-                                        child: Text(
-                                          "$temperature°",
-                                          style: GoogleFonts.getFont("Overpass",
-                                              fontSize: 100,
-                                              color: Colors.white),
+                                        style: GoogleFonts.getFont(
+                                          "Overpass",
+                                          fontSize: 14.sp,
+                                          color: Colors.white,
                                         ),
                                       ),
                                       Padding(
-                                        padding:
-                                            const EdgeInsets.only(bottom: 30),
+                                        padding: const EdgeInsets.only(top: 12.0),
                                         child: Text(
-                                          "$weatherDescription",
+                                          "$temperature°",
                                           style: GoogleFonts.getFont(
                                             "Overpass",
-                                            fontSize: 24,
+                                            fontSize: 48.sp,
+                                            color: Colors.white,
+                                          ),
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.only(bottom: 30),
+                                        child: Text(
+                                          weatherDescription,
+                                          style: GoogleFonts.getFont(
+                                            "Overpass",
+                                            fontSize: 16.sp,
                                             color: Colors.white,
                                             fontWeight: FontWeight.bold,
                                           ),
                                         ),
                                       ),
                                       Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
+                                        mainAxisAlignment: MainAxisAlignment.center,
                                         children: [
                                           Column(
-                                            children: [
+                                            children: const [
                                               BoxedIcon(
                                                 WeatherIcons.strong_wind,
                                                 color: Colors.white,
@@ -196,7 +261,7 @@ class _HomePageState extends State<HomePage> {
                                                   AppLocalizations.of(context)!.wind,
                                                   style: GoogleFonts.getFont(
                                                     "Overpass",
-                                                    fontSize: 18,
+                                                    fontSize: 14.sp,
                                                     color: Colors.white,
                                                   ),
                                                 )
@@ -209,7 +274,7 @@ class _HomePageState extends State<HomePage> {
                                                 "$windSpeed m/s",
                                                 style: GoogleFonts.getFont(
                                                   "Overpass",
-                                                  fontSize: 18,
+                                                  fontSize: 14.sp,
                                                   color: Colors.white,
                                                 ),
                                               )
@@ -218,11 +283,10 @@ class _HomePageState extends State<HomePage> {
                                         ],
                                       ),
                                       Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
+                                        mainAxisAlignment: MainAxisAlignment.center,
                                         children: [
                                           Column(
-                                            children: [
+                                            children: const [
                                               BoxedIcon(
                                                 WeatherIcons.raindrop,
                                                 color: Colors.white,
@@ -238,7 +302,7 @@ class _HomePageState extends State<HomePage> {
                                                   AppLocalizations.of(context)!.hum,
                                                   style: GoogleFonts.getFont(
                                                     "Overpass",
-                                                    fontSize: 18,
+                                                    fontSize: 14.sp,
                                                     color: Colors.white,
                                                   ),
                                                 ),
@@ -251,7 +315,7 @@ class _HomePageState extends State<HomePage> {
                                                 "$humidity %",
                                                 style: GoogleFonts.getFont(
                                                   "Overpass",
-                                                  fontSize: 18,
+                                                  fontSize: 14.sp,
                                                   color: Colors.white,
                                                 ),
                                               )
@@ -268,33 +332,36 @@ class _HomePageState extends State<HomePage> {
                         );
                       }
 
-                      return CircularProgressIndicator(
+                      return const CircularProgressIndicator(
                         color: Colors.white,
                       );
                     },
                   ),
-                  Spacer(),
+                  const Spacer(),
                   Padding(
-                    padding: const EdgeInsets.only(bottom: 34),
+                    padding: const EdgeInsets.only(bottom: 24),
                     child: Container(
-                      constraints: BoxConstraints(minWidth: 200, maxWidth: 220),
+                      constraints: const BoxConstraints(minWidth: 200, maxWidth: 230),
                       height: 60,
                       child: ElevatedButton(
-                        onPressed: () =>
-                            Navigator.pushNamed(context, "/details"),
+                        onPressed: () => Navigator.pushNamed(
+                          context,
+                          "/details",
+                          arguments: DetailsArguments(selectedPlace),
+                        ),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Text(
-                              "${AppLocalizations.of(context)!.forecastReport}",
+                              AppLocalizations.of(context)!.forecastReport,
                               style: GoogleFonts.getFont(
                                 "Overpass",
-                                fontSize: 17,
-                                color: Color(0xFF444E72),
+                                fontSize: 13.sp,
+                                color: const Color(0xFF444E72),
                               ),
                             ),
-                            Padding(
-                              padding: const EdgeInsets.only(left: 10.0),
+                            const Padding(
+                              padding: EdgeInsets.only(left: 10.0),
                               child: Icon(
                                 Icons.navigate_next,
                                 color: Color(0xFF444E72),
@@ -316,41 +383,7 @@ class _HomePageState extends State<HomePage> {
             );
           }
 
-          return Scaffold(
-            backgroundColor: Colors.transparent,
-            body: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Center(
-                  child: Text(
-                    AppLocalizations.of(context)!.gpsPermission,
-                    style: GoogleFonts.getFont("Overpass",
-                        color: Colors.white,
-                        fontWeight: FontWeight.w900,
-                        fontSize: 28),
-                    textAlign: TextAlign.center,
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(top: 30.0),
-                  child: ElevatedButton(
-                    onPressed: () async {
-                      await Geolocator.openAppSettings();
-                      await Geolocator.openLocationSettings();
-                    },
-                    child: Text(
-                      AppLocalizations.of(context)!.tryAgain,
-                      style: GoogleFonts.getFont(
-                        "Overpass",
-                        color: Color(0xFF444E72),
-                      ),
-                    ),
-                    style: ElevatedButton.styleFrom(primary: Colors.white),
-                  ),
-                )
-              ],
-            ),
-          );
+          return const NoGpsPage();
         },
       ),
     );
@@ -364,14 +397,14 @@ class _HomePageState extends State<HomePage> {
 
     DateFormat hourFormatter = DateFormat("Hm", Platform.localeName);
 
-    var tempMax = weatherData.tempMax!.celsius!.floorToDouble();
-    var tempMin = weatherData.tempMin!.celsius!.floorToDouble();
-    var sunriseHour = hourFormatter.format(weatherData.sunrise!.toLocal());
-    var sunsetHour = hourFormatter.format(weatherData.sunset!.toLocal());
-    var windSpeed = weatherData.windSpeed;
-    var pressure = weatherData.pressure;
-    var humidity = weatherData.humidity;
-    var cloudiness = weatherData.cloudiness;
+    double tempMax = weatherData.tempMax!.celsius!.floorToDouble();
+    double tempMin = weatherData.tempMin!.celsius!.floorToDouble();
+    String sunriseHour = hourFormatter.format(weatherData.sunrise!.toLocal());
+    String sunsetHour = hourFormatter.format(weatherData.sunset!.toLocal());
+    double? windSpeed = weatherData.windSpeed;
+    double? pressure = weatherData.pressure;
+    double? humidity = weatherData.humidity;
+    double? cloudiness = weatherData.cloudiness;
 
     await showSlidingBottomSheet(
       context,
@@ -423,39 +456,58 @@ class _HomePageState extends State<HomePage> {
                             width: 30,
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(2),
-                              color: Color(0xFF838BAA),
+                              color: const Color(0xFF838BAA),
                             ),
                           ),
                         ),
                       ),
                       Padding(
                         padding: const EdgeInsets.only(top: 12.0, bottom: 11),
-                        child: Text(AppLocalizations.of(context)!.moreInfo, style: textTheme.headline1),
+                        child: Text(AppLocalizations.of(context)!.moreInfo,
+                            style: textTheme.headline1),
                       ),
                       ListView(
-                        physics: ScrollPhysics(),
+                        physics: const ScrollPhysics(),
                         shrinkWrap: true,
                         children:
                             ListTile.divideTiles(context: context, tiles: [
-                          CardInfo.name(AppLocalizations.of(context)!.maxTemp, "$tempMax °C",
-                              WeatherIcons.thermometer, Colors.redAccent),
+                          CardInfo.name(
+                              AppLocalizations.of(context)!.maxTemp,
+                              "$tempMax °C",
+                              WeatherIcons.thermometer,
+                              Colors.redAccent),
                           CardInfo.name(
                               AppLocalizations.of(context)!.minTemp,
                               "$tempMin °C",
                               WeatherIcons.thermometer_exterior,
                               Colors.lightBlue),
-                          CardInfo.name(AppLocalizations.of(context)!.sunrise, sunriseHour,
-                              WeatherIcons.sunrise, Colors.orangeAccent),
-                          CardInfo.name(AppLocalizations.of(context)!.sunset, sunsetHour,
-                              WeatherIcons.sunset, Colors.deepOrangeAccent),
-                          CardInfo.name(AppLocalizations.of(context)!.wind, "$windSpeed m/s",
-                              WeatherIcons.strong_wind, Colors.grey),
-                          CardInfo.name(AppLocalizations.of(context)!.airPressure, "$pressure Pa",
-                              WeatherIcons.barometer, Colors.lightBlueAccent),
-                          CardInfo.name(AppLocalizations.of(context)!.humidity, "$humidity %",
-                              WeatherIcons.humidity, Colors.blueAccent),
-                          CardInfo.name(AppLocalizations.of(context)!.cloudness, "$cloudiness %",
-                              WeatherIcons.fog, Colors.grey),
+                          CardInfo.name(
+                              AppLocalizations.of(context)!.sunrise,
+                              sunriseHour,
+                              WeatherIcons.sunrise,
+                              Colors.orangeAccent),
+                          CardInfo.name(
+                              AppLocalizations.of(context)!.sunset,
+                              sunsetHour,
+                              WeatherIcons.sunset,
+                              Colors.deepOrangeAccent),
+                          CardInfo.name(
+                              AppLocalizations.of(context)!.wind,
+                              "$windSpeed m/s",
+                              WeatherIcons.strong_wind,
+                              Colors.grey),
+                          CardInfo.name(
+                              AppLocalizations.of(context)!.airPressure,
+                              "$pressure Pa",
+                              WeatherIcons.barometer,
+                              Colors.lightBlueAccent),
+                          CardInfo.name(
+                              AppLocalizations.of(context)!.humidity,
+                              "$humidity %",
+                              WeatherIcons.humidity,
+                              Colors.blueAccent),
+                          CardInfo.name(AppLocalizations.of(context)!.cloudness,
+                              "$cloudiness %", WeatherIcons.fog, Colors.grey),
                         ]).toList(),
                       )
                     ],
