@@ -15,6 +15,7 @@ Weather App is an Android-only application, built with Flutter, as a study of Fl
 - [weather-app](#weather-app)
   - [Table of Contents](#table-of-contents)
   - [Features](#features)
+  - [To-Do](#to-do)
   - [Directory Structure](#directory-structure)
   - [My process](#my-process)
     - [Built with](#built-with)
@@ -32,6 +33,13 @@ Weather App is an Android-only application, built with Flutter, as a study of Fl
 - [x] Get data directly from OpenWeatherMap API
 - [x] Multi-language (JA, PT, EN, ES)
 
+## To-Do
+- [ ] Implement Hive DB
+- [ ] Create settings page
+- [ ] Implement search by speech
+- [ ] Add more languages
+- [ ] Add app icon
+
 ## Directory Structure
 ```
 lib/
@@ -44,11 +52,13 @@ lib/
 │   ├── app_ja.arb
 │   └── app_pt.arb
 ├── models/
+│   ├── details_arguments.dart
 │   └── place.dart
 ├── pages/
 │   ├── forecast_page.dart
 │   ├── home_page.dart
 │   ├── map_page.dart
+│   ├── no_gps_page.dart
 │   └── search_page.dart
 ├── services/
 │   ├── geo_api.dart
@@ -102,11 +112,15 @@ Clone the repo to your local computer
 Access the project's folder in your cmd/terminal
 > $ cd weather-app
 
-Fulfill the .env.example file with your API keys
+Fulfill the .env.example file with your API keys and remove the .example from the file
 ```
-API_KEY= openweather map
-MAPS_API_KEY= google maps
-GOOGLE_PLACE_API_KEY= google place
+API_KEY= openweather map api key
+GOOGLE_PLACE_API_KEY= google place api key
+```
+
+Add the following line on android/local.properties file
+```
+MAPS_API_KEY= your google maps api key
 ```
 
 For OpenWeatherMap API, check this [link](https://openweathermap.org/api). For Google APIs, check this [link](https://developers.google.com/maps/documentation/places/web-service/get-api-key)
