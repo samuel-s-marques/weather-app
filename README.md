@@ -137,3 +137,5 @@ I welcome and encourage all pull requests. It usually will take me within 24-48 
 "[Weather Forecast App](https://www.figma.com/community/file/885501292477669105)" by [Maulana Farhan Najib](https://www.figma.com/@maulana) is licensed under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/).
 
 Mockups provided by [Previewed](https://previewed.app/).
+
+Icon provided by [FreeIconsPng](https://www.freeiconspng.com/img/11063).
