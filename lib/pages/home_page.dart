@@ -60,8 +60,11 @@ class _HomePageState extends State<HomePage> {
             ]),
       ),
       child: FutureBuilder(
-        future: Future.wait(
-            [getCurrentLocation(), WeatherDatabase().findAllFavoritePlaces(), getPrefs()]),
+        future: Future.wait([
+          getCurrentLocation(),
+          WeatherDatabase().findAllFavoritePlaces(),
+          getPrefs()
+        ]),
         builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
           if (snapshot.hasData) {
             String currentLocation = snapshot.data[0];
@@ -77,7 +80,8 @@ class _HomePageState extends State<HomePage> {
             placesNames.add(currentLocation);
             placesNames.add(prefs.getString('selectedPlace') ?? currentLocation);
             placesNames = placesNames.toSet().toList();
-            String selectedPlace = prefs.getString('selectedPlace') ?? currentLocation;
+            String selectedPlace =
+                prefs.getString('selectedPlace') ?? currentLocation;
 
             return Scaffold(
               resizeToAvoidBottomInset: false,
@@ -172,18 +176,23 @@ class _HomePageState extends State<HomePage> {
               body: Column(
                 children: [
                   FutureBuilder(
-                    future: WeatherApi().getCurrentWeather(selectedPlace, context),
-                    builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
+                    future:
+                    WeatherApi().getCurrentWeather(selectedPlace, context),
+                    builder:
+                        (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
                       if (snapshot.hasData) {
                         String temperature = snapshot.data!.temperature
                             .toString()
                             .split(" ")[0]
                             .split(".")[0];
-                        String weatherDescription =
-                        snapshot.data!.weatherDescription.toString().capitalize();
+                        String weatherDescription = snapshot
+                            .data!.weatherDescription
+                            .toString()
+                            .capitalize();
                         double? windSpeed = snapshot.data!.windSpeed;
                         double? humidity = snapshot.data!.humidity;
-                        String dateTime = dateFormatter.format(snapshot.data!.date);
+                        String dateTime =
+                        dateFormatter.format(snapshot.data!.date);
                         String weatherIcon = snapshot.data!.weatherIcon;
                         weatherData = snapshot.data!;
 
@@ -206,7 +215,8 @@ class _HomePageState extends State<HomePage> {
                                   borderRadius: BorderRadius.circular(20),
                                 ),
                                 child: Padding(
-                                  padding: const EdgeInsets.only(bottom: 26, top: 26),
+                                  padding:
+                                  const EdgeInsets.only(bottom: 26, top: 26),
                                   child: Column(
                                     crossAxisAlignment: CrossAxisAlignment.center,
                                     children: [
@@ -230,7 +240,8 @@ class _HomePageState extends State<HomePage> {
                                         ),
                                       ),
                                       Padding(
-                                        padding: const EdgeInsets.only(bottom: 30),
+                                        padding:
+                                        const EdgeInsets.only(bottom: 30),
                                         child: Text(
                                           weatherDescription,
                                           style: GoogleFonts.getFont(
@@ -242,7 +253,8 @@ class _HomePageState extends State<HomePage> {
                                         ),
                                       ),
                                       Row(
-                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        mainAxisAlignment:
+                                        MainAxisAlignment.center,
                                         children: [
                                           Column(
                                             children: const [
@@ -258,7 +270,8 @@ class _HomePageState extends State<HomePage> {
                                             child: Column(
                                               children: [
                                                 Text(
-                                                  AppLocalizations.of(context)!.wind,
+                                                  AppLocalizations.of(context)!
+                                                      .wind,
                                                   style: GoogleFonts.getFont(
                                                     "Overpass",
                                                     fontSize: 14.sp,
@@ -283,7 +296,8 @@ class _HomePageState extends State<HomePage> {
                                         ],
                                       ),
                                       Row(
-                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        mainAxisAlignment:
+                                        MainAxisAlignment.center,
                                         children: [
                                           Column(
                                             children: const [
@@ -299,7 +313,8 @@ class _HomePageState extends State<HomePage> {
                                                 padding: const EdgeInsets.only(
                                                     left: 21.0, right: 23),
                                                 child: Text(
-                                                  AppLocalizations.of(context)!.hum,
+                                                  AppLocalizations.of(context)!
+                                                      .hum,
                                                   style: GoogleFonts.getFont(
                                                     "Overpass",
                                                     fontSize: 14.sp,
@@ -341,7 +356,8 @@ class _HomePageState extends State<HomePage> {
                   Padding(
                     padding: const EdgeInsets.only(bottom: 24),
                     child: Container(
-                      constraints: const BoxConstraints(minWidth: 200, maxWidth: 230),
+                      constraints:
+                      const BoxConstraints(minWidth: 200, maxWidth: 230),
                       height: 60,
                       child: ElevatedButton(
                         onPressed: () => Navigator.pushNamed(
