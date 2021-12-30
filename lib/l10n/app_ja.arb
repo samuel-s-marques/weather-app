@@ -17,5 +17,8 @@
   "forecastReport": "天気予報",
   "gpsPermission": "GPSの許可が必要",
   "tryAgain": "やり直す",
-  "noData": "データなし。"
+  "noData": "データなし。",
+  "microphoneUse": "マイク使用が不許可。",
+  "recentSearch": "最近の検索",
+  "favoritePlace": "お気に入りスポット"
 }

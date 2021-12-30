@@ -17,5 +17,8 @@
   "forecastReport": "Forecast report",
   "gpsPermission": "You need to allow GPS permissions to use this app.",
   "tryAgain": "Try again",
-  "noData": "No data found."
+  "noData": "No data found.",
+  "microphoneUse": "Microphone use is not allowed.",
+  "recentSearch": "Recent searches",
+  "favoritePlace": "Favorite places"
 }
