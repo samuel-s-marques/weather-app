@@ -91,7 +91,6 @@ lib/
 - weather_icons: [link](https://pub.dev/packages/weather_icons)
 - intl: [link](https://pub.dev/packages/intl)
 - flutter_dotenv: [link](https://pub.dev/packages/flutter_dotenv)
-- latlong2: [link](https://pub.dev/packages/latlong2)
 - geocoding: [link](https://pub.dev/packages/geocoding)
 - google_maps_flutter: [link](https://pub.dev/packages/google_maps_flutter)
 - google_place: [link](https://pub.dev/packages/google_place)
@@ -100,7 +99,6 @@ lib/
 - dropdown_search: [link](https://pub.dev/packages/dropdown_search)
 - shared_preferences: [link](https://pub.dev/packages/shared_preferences)
 - sizer: [link](https://pub.dev/packages/sizer)
-- flutter_localizations: [link](https://pub.dev/packages/flutter_localizations)
 
 ## How to use
 ### Requirements
