@@ -33,6 +33,7 @@ class MyApp extends StatelessWidget {
             Locale('en', ''),
             Locale('es', ''),
             Locale('ja', ''),
+            Locale('pt', ''),
           ],
           theme: ThemeData(
             textTheme: TextTheme(
@@ -46,8 +47,9 @@ class MyApp extends StatelessWidget {
                   color: const Color(0xFF444E72)),
             ),
           ),
-          home: const HomePage(),
+          initialRoute: '/home',
           routes: {
+            "/home": (context) => const HomePage(),
             "/details": (context) => const ForecastPage(),
             "/map": (context) => const MapPage(),
           },
