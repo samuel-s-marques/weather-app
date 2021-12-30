@@ -1,9 +1,9 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
+import 'package:sizer/sizer.dart';
 import 'package:weather_icons/weather_icons.dart';
+import 'package:weatherapp/models/details_arguments.dart';
 import 'package:weatherapp/services/weather_api.dart';
 import 'package:weatherapp/widgets/card_forecast.dart';
 import 'package:weatherapp/widgets/card_weather.dart';
@@ -18,16 +18,20 @@ class ForecastPage extends StatefulWidget {
 }
 
 class _ForecastPageState extends State<ForecastPage> {
-  final ScrollController _scrollController = ScrollController();
-  var data = WeatherApi().getNextFiveDaysForecast("São Paulo");
-
   @override
   Widget build(BuildContext context) {
-    final now = new DateTime.now();
+    final args = ModalRoute.of(context)!.settings.arguments as DetailsArguments;
+
+    final ScrollController _scrollController = ScrollController();
+    var data = WeatherApi().getNextFiveDaysForecast(args.placeName, context);
+    Locale currentLocale = Localizations.localeOf(context);
+    String currentLanguageCode = currentLocale.languageCode;
+
+    final now = DateTime.now();
     String formattedDate =
-        DateFormat("MMM, d", Platform.localeName).format(now);
-    DateFormat hourFormatter = DateFormat("Hm", Platform.localeName);
-    DateFormat weekDayFormatter = DateFormat("EEEE", Platform.localeName);
+        DateFormat("MMM, d", currentLanguageCode).format(now);
+    DateFormat hourFormatter = DateFormat("Hm", currentLanguageCode);
+    DateFormat weekDayFormatter = DateFormat("EEEE", currentLanguageCode);
 
     return Container(
       decoration: const BoxDecoration(
@@ -44,27 +48,22 @@ class _ForecastPageState extends State<ForecastPage> {
         appBar: AppBar(
           backgroundColor: Colors.transparent,
           elevation: 0.0,
-          toolbarHeight: 120,
+          toolbarHeight: 110,
           title: Text(
             AppLocalizations.of(context)!.back,
-            style: GoogleFonts.getFont("Overpass",
-                fontWeight: FontWeight.bold, fontSize: 22, color: Colors.white),
+            style: GoogleFonts.getFont(
+              "Overpass",
+              fontWeight: FontWeight.bold,
+              fontSize: 14.sp,
+              color: Colors.white,
+            ),
           ),
           leading: IconButton(
             onPressed: () => Navigator.pop(context),
-            icon: Icon(Icons.navigate_before),
+            icon: const Icon(Icons.navigate_before),
           ),
-          actions: [
-            Padding(
-              padding: const EdgeInsets.only(right: 10.0),
-              child: IconButton(
-                onPressed: () {},
-                icon: Icon(Icons.settings),
-              ),
-            )
-          ],
         ),
-        body: Column(
+        body: ListView(
           children: [
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 30),
@@ -74,7 +73,7 @@ class _ForecastPageState extends State<ForecastPage> {
                   Text(
                     AppLocalizations.of(context)!.today,
                     style: GoogleFonts.getFont("Overpass",
-                        fontSize: 24,
+                        fontSize: 17.sp,
                         fontWeight: FontWeight.bold,
                         color: Colors.white),
                   ),
@@ -82,7 +81,7 @@ class _ForecastPageState extends State<ForecastPage> {
                     formattedDate,
                     style: GoogleFonts.getFont(
                       "Overpass",
-                      fontSize: 18,
+                      fontSize: 14.sp,
                       color: Colors.white,
                     ),
                   )
@@ -90,12 +89,12 @@ class _ForecastPageState extends State<ForecastPage> {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.only(top: 32.0, left: 8, right: 8),
+              padding: const EdgeInsets.only(top: 10.0, left: 8, right: 8),
               child: FutureBuilder(
                 builder:
                     (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
                   if (snapshot.hasData) {
-                    return Container(
+                    return SizedBox(
                       height: 170,
                       child: ListView.builder(
                         scrollDirection: Axis.horizontal,
@@ -116,21 +115,24 @@ class _ForecastPageState extends State<ForecastPage> {
                                 hour: time);
                           }
 
-                          return CircularProgressIndicator();
+                          return const CircularProgressIndicator();
                         },
                       ),
                     );
                   }
 
-                  return CircularProgressIndicator(
-                    color: Colors.white,
+                  return const SizedBox(
+                    height: 170,
+                    child: Center(
+                      child: CircularProgressIndicator(color: Colors.white),
+                    ),
                   );
                 },
                 future: data,
               ),
             ),
             Padding(
-              padding: const EdgeInsets.only(left: 30.0, right: 30.0, top: 50),
+              padding: const EdgeInsets.only(left: 30.0, right: 30.0, top: 20),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -138,12 +140,12 @@ class _ForecastPageState extends State<ForecastPage> {
                     AppLocalizations.of(context)!.nextForecast,
                     style: GoogleFonts.getFont(
                       "Overpass",
-                      fontSize: 23,
+                      fontSize: 17.sp,
                       fontWeight: FontWeight.w900,
                       color: Colors.white,
                     ),
                   ),
-                  Icon(
+                  const Icon(
                     Icons.event,
                     color: Colors.white,
                   )
@@ -154,14 +156,14 @@ class _ForecastPageState extends State<ForecastPage> {
               future: data,
               builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
                 if (snapshot.hasData) {
-                  return Container(
-                    height: 300,
+                  return SizedBox(
+                    height: 40.h,
                     child: Padding(
                       padding: const EdgeInsets.only(
-                          right: 30.0, left: 30.0, top: 23),
+                          right: 30.0, left: 30.0, top: 10),
                       child: RawScrollbar(
                         thumbColor: Colors.white,
-                        radius: Radius.circular(5),
+                        radius: const Radius.circular(5),
                         isAlwaysShown: true,
                         controller: _scrollController,
                         child: Padding(
@@ -173,8 +175,12 @@ class _ForecastPageState extends State<ForecastPage> {
                             itemBuilder: (BuildContext context, int index) {
                               if (snapshot.hasData) {
                                 var now = DateTime.now();
-                                var today = DateTime(now.year, now.month, now.day);
-                                var day = weekDayFormatter.format(snapshot.data[index]!.date).split("-")[0].capitalize();
+                                var today =
+                                    DateTime(now.year, now.month, now.day);
+                                var day = weekDayFormatter
+                                    .format(snapshot.data[index]!.date)
+                                    .split("-")[0]
+                                    .capitalize();
 
                                 if (today.difference(snapshot.data[index]!.date).inDays == 0) {
                                   day = AppLocalizations.of(context)!.today;
@@ -188,8 +194,7 @@ class _ForecastPageState extends State<ForecastPage> {
                                     .toString()
                                     .split(" ")[0]
                                     .split(".")[0];
-                                var weatherIcon =
-                                    snapshot.data[index]!.weatherIcon;
+                                var weatherIcon = snapshot.data[index]!.weatherIcon;
 
                                 return CardForecast(
                                   day: day,
@@ -199,8 +204,7 @@ class _ForecastPageState extends State<ForecastPage> {
                                 );
                               }
 
-                              return CircularProgressIndicator(
-                                  color: Colors.white);
+                              return const CircularProgressIndicator(color: Colors.white);
                             },
                           ),
                         ),
@@ -209,17 +213,21 @@ class _ForecastPageState extends State<ForecastPage> {
                   );
                 }
 
-                return CircularProgressIndicator(color: Colors.white);
+                return SizedBox(
+                  height: 150.sp,
+                  child: const Center(
+                    child: CircularProgressIndicator(color: Colors.white),
+                  ),
+                );
               },
             ),
-            Spacer(),
             Padding(
-              padding: const EdgeInsets.only(bottom: 25.0),
+              padding: const EdgeInsets.only(bottom: 25.0, top: 25),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Padding(
-                    padding: const EdgeInsets.only(right: 17.0),
+                  const Padding(
+                    padding: EdgeInsets.only(right: 17.0),
                     child: BoxedIcon(
                       WeatherIcons.day_sunny,
                       color: Colors.white,
@@ -228,7 +236,9 @@ class _ForecastPageState extends State<ForecastPage> {
                   Text(
                     "OpenWeatherMap",
                     style: GoogleFonts.getFont("Overpass",
-                        fontSize: 18, color: Colors.white),
+                      fontSize: 13.sp,
+                      color: Colors.white,
+                    ),
                   ),
                 ],
               ),
