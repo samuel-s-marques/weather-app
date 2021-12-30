@@ -99,6 +99,8 @@ lib/
 - sqflite: [link](https://pub.dev/packages/sqflite)
 - path: [link](https://pub.dev/packages/path)
 - dropdown_search: [link](https://pub.dev/packages/dropdown_search)
+- shared_preferences: [link](https://pub.dev/packages/shared_preferences)
+- sizer: [link](https://pub.dev/packages/sizer)
 - flutter_localizations: [link](https://pub.dev/packages/flutter_localizations)
 
 ## How to use
