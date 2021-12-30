@@ -112,11 +112,15 @@ Clone the repo to your local computer
 Access the project's folder in your cmd/terminal
 > $ cd weather-app
 
-Fulfill the .env.example file with your API keys
+Fulfill the .env.example file with your API keys and remove the .example from the file
 ```
-API_KEY= openweather map
-MAPS_API_KEY= google maps
-GOOGLE_PLACE_API_KEY= google place
+API_KEY= openweather map api key
+GOOGLE_PLACE_API_KEY= google place api key
+```
+
+Add the following line on android/local.properties file
+```
+MAPS_API_KEY= your google maps api key
 ```
 
 For OpenWeatherMap API, check this [link](https://openweathermap.org/api). For Google APIs, check this [link](https://developers.google.com/maps/documentation/places/web-service/get-api-key)
