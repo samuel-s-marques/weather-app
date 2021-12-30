@@ -80,6 +80,7 @@ class _MapPageState extends State<MapPage> with TickerProviderStateMixin {
         axisAlignment: isPortrait ? 0.0 : -1.0,
         openAxisAlignment: 0.0,
         width: isPortrait ? 600 : 500,
+        automaticallyImplyBackButton: false,
         debounceDelay: const Duration(milliseconds: 500),
         onQueryChanged: (query) async {
           if (query.trim().isNotEmpty) {
@@ -88,7 +89,7 @@ class _MapPageState extends State<MapPage> with TickerProviderStateMixin {
             });
           }
 
-          var places = await googlePlace.autocomplete.get(query);
+          var places = await googlePlace.autocomplete.get(query, types: '(cities)');
           _results = places!.predictions!;
 
           for (var result in _results) {
@@ -102,6 +103,24 @@ class _MapPageState extends State<MapPage> with TickerProviderStateMixin {
             _isLoading = false;
           });
         },
+        leadingActions: [
+          FloatingSearchBarAction(
+            showIfOpened: true,
+            child: CircularButton(
+              tooltip: AppLocalizations.of(context)!.back,
+              icon: const Icon(Icons.arrow_back_sharp),
+              onPressed: () {
+                if (controller.isOpen) {
+                  controller.close();
+                } else {
+                  Navigator.pushNamed(context, "/home").then((_) {
+                    setState(() {});
+                  });
+                }
+              },
+            ),
+          )
+        ],
         transition: CircularFloatingSearchBarTransition(),
         actions: [
           FloatingSearchBarAction(
