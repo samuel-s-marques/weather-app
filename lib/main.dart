@@ -7,6 +7,7 @@ import 'package:weatherapp/pages/home_page.dart';
 import 'package:weatherapp/pages/map_page.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:weatherapp/pages/no_gps_page.dart';
 
 Future main() async {
   await dotenv.load(fileName: ".env");
@@ -52,6 +53,7 @@ class MyApp extends StatelessWidget {
             "/home": (context) => const HomePage(),
             "/details": (context) => const ForecastPage(),
             "/map": (context) => const MapPage(),
+            "/gps": (context) => const NoGpsPage(),
           },
         );
       },
