@@ -89,7 +89,8 @@ class _MapPageState extends State<MapPage> with TickerProviderStateMixin {
             });
           }
 
-          var places = await googlePlace.autocomplete.get(query, types: '(cities)');
+          var places =
+              await googlePlace.autocomplete.get(query, types: '(cities)');
           _results = places!.predictions!;
 
           for (var result in _results) {
@@ -123,13 +124,6 @@ class _MapPageState extends State<MapPage> with TickerProviderStateMixin {
         ],
         transition: CircularFloatingSearchBarTransition(),
         actions: [
-          FloatingSearchBarAction(
-            showIfOpened: false,
-            child: CircularButton(
-              icon: const Icon(Icons.mic),
-              onPressed: () {},
-            ),
-          ),
           FloatingSearchBarAction.searchToClear(
             showIfClosed: false,
           ),
@@ -149,7 +143,7 @@ class _MapPageState extends State<MapPage> with TickerProviderStateMixin {
                         Padding(
                           padding: const EdgeInsets.only(top: 30.0, left: 30),
                           child: Text(
-                            "Recent search",
+                            AppLocalizations.of(context)!.recentSearch,
                             style: GoogleFonts.getFont(
                               "Overpass",
                               fontSize: 17,
@@ -207,7 +201,7 @@ class _MapPageState extends State<MapPage> with TickerProviderStateMixin {
                         Padding(
                           padding: const EdgeInsets.only(top: 30.0, left: 30),
                           child: Text(
-                            "Favorite place",
+                            AppLocalizations.of(context)!.favoritePlace,
                             style: GoogleFonts.getFont(
                               "Overpass",
                               fontSize: 17,
