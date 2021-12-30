@@ -27,17 +27,18 @@ Weather App is an Android-only application, built with Flutter, as a study of Fl
   - [Created & Maintained By](#created--maintained-by)
 
 ## Features
-- [x] Detailed forecast
-- [x] Up to seven days forecast
-- [x] Coverage from anywhere
-- [x] Multi-language (JA, PT, EN, ES)
+- ✅ Detailed forecast
+- ✅ Up to seven days forecast
+- ✅ Coverage from anywhere
+- ✅ Multi-language (JA, PT, EN, ES)
+- ✅ Custom icons for each weather condition
 
 ## To-Do
 - [ ] Implement Hive DB
 - [ ] Create settings page
 - [ ] Implement search by speech
 - [ ] Add more languages
-- [ ] Add app icon
+- [ ] Dark mode
 
 ## Directory Structure
 ```
