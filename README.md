@@ -27,10 +27,9 @@ Weather App is an Android-only application, built with Flutter, as a study of Fl
   - [Created & Maintained By](#created--maintained-by)
 
 ## Features
-- [x] Geolocation
-- [x] Find place by text
-- [ ] Find place by voice
-- [x] Get data directly from OpenWeatherMap API
+- [x] Detailed forecast
+- [x] Up to seven days forecast
+- [x] Coverage from anywhere
 - [x] Multi-language (JA, PT, EN, ES)
 
 ## To-Do
@@ -78,9 +77,9 @@ lib/
 - Flutter
 - OpenWeatherMap API
 - SQLite database
+- Shared Preferences
 - Google Maps API
 - Google Place API
-- Google Fonts
 
 ### Packages I'm using
 - weather: [link](https://pub.dev/packages/weather)
@@ -88,7 +87,6 @@ lib/
 - geolocator: [link](https://pub.dev/packages/geolocator)
 - material_floating_search_bar: [link](https://pub.dev/packages/material_floating_search_bar)
 - sliding_sheet: [link](https://pub.dev/packages/sliding_sheet)
-- speech_to_text: [link](https://pub.dev/packages/speech_to_text)
 - weather_icons: [link](https://pub.dev/packages/weather_icons)
 - intl: [link](https://pub.dev/packages/intl)
 - flutter_dotenv: [link](https://pub.dev/packages/flutter_dotenv)
