@@ -33,10 +33,12 @@ Weather App is an Android-only application, built with Flutter, as a study of Fl
 - [x] Get data directly from OpenWeatherMap API
 - [x] Multi-language (JA, PT, EN, ES)
 
-
 ## To-Do
-- [ ] Implement Hive
+- [ ] Implement Hive DB
+- [ ] Create settings page
 - [ ] Implement search by speech
+- [ ] Add more languages
+- [ ] Add app icon
 
 ## Directory Structure
 ```
@@ -50,11 +52,13 @@ lib/
 │   ├── app_ja.arb
 │   └── app_pt.arb
 ├── models/
+│   ├── details_arguments.dart
 │   └── place.dart
 ├── pages/
 │   ├── forecast_page.dart
 │   ├── home_page.dart
 │   ├── map_page.dart
+│   ├── no_gps_page.dart
 │   └── search_page.dart
 ├── services/
 │   ├── geo_api.dart
