@@ -3,7 +3,7 @@
 
     <application
         android:icon="@mipmap/launcher_icon"
-        android:label="weatherapp">
+        android:label="Weather App">
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="${MAPS_API_KEY}" />
