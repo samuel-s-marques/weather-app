@@ -1,11 +1,6 @@
 # weather-app
 
-<p>
-    <img src="photos/image1.jpeg" width="400px" height="auto" hspace="5" vspace="20">
-    <img src="photos/image2.jpeg" width="400px" height="auto" hspace="5" vspace="20">
-    <img src="photos/image3.jpeg" width="400px" height="auto" hspace="5" vspace="20">
-    <img src="photos/image4.jpeg" width="400px" height="auto" hspace="5" vspace="20">
-</p>
+![App mockup](photos/mockup.jpg "App mockup")
 
 Weather app is a design implementation of [Weather Forecast App](https://www.figma.com/community/file/885501292477669105)" designed by [Maulana Farhan Najib](https://www.figma.com/@maulana).
 
@@ -14,6 +9,7 @@ Weather App is an Android-only application, built with Flutter, as a study of Fl
 ## Table of Contents
 - [weather-app](#weather-app)
   - [Table of Contents](#table-of-contents)
+  - [Images](#images)
   - [Features](#features)
   - [To-Do](#to-do)
   - [Directory Structure](#directory-structure)
@@ -25,6 +21,14 @@ Weather App is an Android-only application, built with Flutter, as a study of Fl
     - [Building](#building)
   - [Pull Requests](#pull-requests)
   - [Created & Maintained By](#created--maintained-by)
+
+## Images
+<p>
+    <img src="photos/image1.jpeg" width="400px" height="auto" hspace="5" vspace="20">
+    <img src="photos/image2.jpeg" width="400px" height="auto" hspace="5" vspace="20">
+    <img src="photos/image3.jpeg" width="400px" height="auto" hspace="5" vspace="20">
+    <img src="photos/image4.jpeg" width="400px" height="auto" hspace="5" vspace="20">
+</p>
 
 ## Features
 - ✅ Detailed forecast
@@ -91,7 +95,6 @@ lib/
 - weather_icons: [link](https://pub.dev/packages/weather_icons)
 - intl: [link](https://pub.dev/packages/intl)
 - flutter_dotenv: [link](https://pub.dev/packages/flutter_dotenv)
-- latlong2: [link](https://pub.dev/packages/latlong2)
 - geocoding: [link](https://pub.dev/packages/geocoding)
 - google_maps_flutter: [link](https://pub.dev/packages/google_maps_flutter)
 - google_place: [link](https://pub.dev/packages/google_place)
@@ -100,7 +103,6 @@ lib/
 - dropdown_search: [link](https://pub.dev/packages/dropdown_search)
 - shared_preferences: [link](https://pub.dev/packages/shared_preferences)
 - sizer: [link](https://pub.dev/packages/sizer)
-- flutter_localizations: [link](https://pub.dev/packages/flutter_localizations)
 
 ## How to use
 ### Requirements
