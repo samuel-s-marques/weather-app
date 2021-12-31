@@ -2,7 +2,7 @@
 
 ![App mockup](photos/mockup.jpg "App mockup")
 
-Weather app is a design implementation of [Weather Forecast App](https://www.figma.com/community/file/885501292477669105)" designed by [Maulana Farhan Najib](https://www.figma.com/@maulana).
+Weather app is a design implementation of [Weather Forecast App](https://www.figma.com/community/file/885501292477669105), designed by [Maulana Farhan Najib](https://www.figma.com/@maulana).
 
 Weather App is an Android-only application, built with Flutter, as a study of Flutter. I have tried to collect all features of the original design, but some I did not found useful, like notifications, which I replaced with a button to show more info about the weather. It uses SQLite to store recent searches and favorite places.
 
