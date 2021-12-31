@@ -16,7 +16,7 @@ class CardWeather extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return SizedBox(
       width: 100,
       child: Card(
         color: isActive ? Colors.white.withOpacity(0.2) : Colors.transparent,
