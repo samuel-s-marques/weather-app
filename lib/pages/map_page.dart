@@ -58,6 +58,8 @@ class _MapPageState extends State<MapPage> with TickerProviderStateMixin {
     final isPortrait =
         MediaQuery.of(context).orientation == Orientation.portrait;
     var googlePlace = GooglePlace(dotenv.get('GOOGLE_PLACE_API_KEY'));
+    Locale currentLocale = Localizations.localeOf(context);
+    String currentLanguageCode = currentLocale.languageCode;
 
     List<Place> favoritePlaces = placeList[1];
     List<Place> recentPlaces = placeList[0];
@@ -89,8 +91,11 @@ class _MapPageState extends State<MapPage> with TickerProviderStateMixin {
             });
           }
 
-          var places =
-              await googlePlace.autocomplete.get(query, types: '(cities)');
+          var places = await googlePlace.autocomplete.get(
+            query,
+            types: '(cities)',
+            language: currentLanguageCode,
+          );
           _results = places!.predictions!;
 
           for (var result in _results) {
