@@ -173,118 +173,101 @@ class _HomePageState extends State<HomePage> {
                   )
                 ],
               ),
-              body: Column(
-                children: [
-                  FutureBuilder(
-                    future:
-                    WeatherApi().getCurrentWeather(selectedPlace, context),
-                    builder:
-                        (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
-                      if (snapshot.hasData) {
-                        String temperature = snapshot.data!.temperature
-                            .toString()
-                            .split(" ")[0]
-                            .split(".")[0];
-                        String weatherDescription = snapshot
-                            .data!.weatherDescription
-                            .toString()
-                            .capitalize();
-                        double? windSpeed = snapshot.data!.windSpeed;
-                        double? humidity = snapshot.data!.humidity;
-                        String dateTime =
-                        dateFormatter.format(snapshot.data!.date);
-                        String weatherIcon = snapshot.data!.weatherIcon;
-                        weatherData = snapshot.data!;
+              body: FutureBuilder(
+                future: WeatherApi().getCurrentWeather(selectedPlace, context),
+                builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
+                  if (snapshot.hasData) {
+                    String temperature = snapshot.data!.temperature
+                        .toString()
+                        .split(" ")[0]
+                        .split(".")[0];
+                    String weatherDescription = snapshot
+                        .data!.weatherDescription
+                        .toString()
+                        .capitalize();
+                    double? windSpeed = snapshot.data!.windSpeed;
+                    double? humidity = snapshot.data!.humidity;
+                    String dateTime =
+                    dateFormatter.format(snapshot.data!.date);
+                    String weatherIcon = snapshot.data!.weatherIcon;
+                    weatherData = snapshot.data!;
 
-                        return Column(
-                          children: [
-                            Center(
-                              child: Image.network(
-                                "http://openweathermap.org/img/wn/$weatherIcon@4x.png",
-                                fit: BoxFit.contain,
+                    return SingleChildScrollView(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Image.network(
+                            "http://openweathermap.org/img/wn/$weatherIcon@4x.png",
+                            fit: BoxFit.fill,
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 30),
+                            child: Card(
+                              color: Colors.white.withOpacity(0.2),
+                              elevation: 0,
+                              shape: RoundedRectangleBorder(
+                                side: const BorderSide(
+                                    color: Colors.white, width: 1.85),
+                                borderRadius: BorderRadius.circular(20),
                               ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: 30),
-                              child: Card(
-                                color: Colors.white.withOpacity(0.2),
-                                elevation: 0,
-                                shape: RoundedRectangleBorder(
-                                  side: const BorderSide(
-                                      color: Colors.white, width: 1.85),
-                                  borderRadius: BorderRadius.circular(20),
-                                ),
-                                child: Padding(
-                                  padding:
-                                  const EdgeInsets.only(bottom: 26, top: 26),
-                                  child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.center,
-                                    children: [
-                                      Text(
-                                        "${AppLocalizations.of(context)!.today}, $dateTime",
+                              child: Padding(
+                                padding:
+                                const EdgeInsets.only(bottom: 26, top: 26),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      "${AppLocalizations.of(context)!.today}, $dateTime",
+                                      style: GoogleFonts.getFont(
+                                        "Overpass",
+                                        fontSize: 14.sp,
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.only(top: 12.0),
+                                      child: Text(
+                                        "$temperature°",
                                         style: GoogleFonts.getFont(
                                           "Overpass",
-                                          fontSize: 14.sp,
+                                          fontSize: 48.sp,
                                           color: Colors.white,
                                         ),
                                       ),
-                                      Padding(
-                                        padding: const EdgeInsets.only(top: 12.0),
-                                        child: Text(
-                                          "$temperature°",
-                                          style: GoogleFonts.getFont(
-                                            "Overpass",
-                                            fontSize: 48.sp,
-                                            color: Colors.white,
-                                          ),
+                                    ),
+                                    Padding(
+                                      padding:
+                                      const EdgeInsets.only(bottom: 30),
+                                      child: Text(
+                                        weatherDescription,
+                                        style: GoogleFonts.getFont(
+                                          "Overpass",
+                                          fontSize: 16.sp,
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.bold,
                                         ),
                                       ),
-                                      Padding(
-                                        padding:
-                                        const EdgeInsets.only(bottom: 30),
-                                        child: Text(
-                                          weatherDescription,
-                                          style: GoogleFonts.getFont(
-                                            "Overpass",
-                                            fontSize: 16.sp,
-                                            color: Colors.white,
-                                            fontWeight: FontWeight.bold,
-                                          ),
+                                    ),
+                                    Row(
+                                      mainAxisAlignment:
+                                      MainAxisAlignment.center,
+                                      children: [
+                                        Column(
+                                          children: const [
+                                            BoxedIcon(
+                                              WeatherIcons.strong_wind,
+                                              color: Colors.white,
+                                            )
+                                          ],
                                         ),
-                                      ),
-                                      Row(
-                                        mainAxisAlignment:
-                                        MainAxisAlignment.center,
-                                        children: [
-                                          Column(
-                                            children: const [
-                                              BoxedIcon(
-                                                WeatherIcons.strong_wind,
-                                                color: Colors.white,
-                                              )
-                                            ],
-                                          ),
-                                          Padding(
-                                            padding: const EdgeInsets.only(
-                                                left: 21.0, right: 23),
-                                            child: Column(
-                                              children: [
-                                                Text(
-                                                  AppLocalizations.of(context)!
-                                                      .wind,
-                                                  style: GoogleFonts.getFont(
-                                                    "Overpass",
-                                                    fontSize: 14.sp,
-                                                    color: Colors.white,
-                                                  ),
-                                                )
-                                              ],
-                                            ),
-                                          ),
-                                          Column(
+                                        Padding(
+                                          padding: const EdgeInsets.only(
+                                              left: 21.0, right: 23),
+                                          child: Column(
                                             children: [
                                               Text(
-                                                "$windSpeed m/s",
+                                                AppLocalizations.of(context)!
+                                                    .wind,
                                                 style: GoogleFonts.getFont(
                                                   "Overpass",
                                                   fontSize: 14.sp,
@@ -293,71 +276,87 @@ class _HomePageState extends State<HomePage> {
                                               )
                                             ],
                                           ),
-                                        ],
-                                      ),
-                                      Row(
-                                        mainAxisAlignment:
-                                        MainAxisAlignment.center,
-                                        children: [
-                                          Column(
-                                            children: const [
-                                              BoxedIcon(
-                                                WeatherIcons.raindrop,
+                                        ),
+                                        Column(
+                                          children: [
+                                            Text(
+                                              "$windSpeed m/s",
+                                              style: GoogleFonts.getFont(
+                                                "Overpass",
+                                                fontSize: 14.sp,
                                                 color: Colors.white,
-                                              )
-                                            ],
-                                          ),
-                                          Column(
-                                            children: [
-                                              Padding(
-                                                padding: const EdgeInsets.only(
-                                                    left: 21.0, right: 23),
-                                                child: Text(
-                                                  AppLocalizations.of(context)!
-                                                      .hum,
-                                                  style: GoogleFonts.getFont(
-                                                    "Overpass",
-                                                    fontSize: 14.sp,
-                                                    color: Colors.white,
-                                                  ),
-                                                ),
-                                              )
-                                            ],
-                                          ),
-                                          Column(
-                                            children: [
-                                              Text(
-                                                "$humidity %",
+                                              ),
+                                            )
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                    Row(
+                                      mainAxisAlignment:
+                                      MainAxisAlignment.center,
+                                      children: [
+                                        Column(
+                                          children: const [
+                                            BoxedIcon(
+                                              WeatherIcons.raindrop,
+                                              color: Colors.white,
+                                            )
+                                          ],
+                                        ),
+                                        Column(
+                                          children: [
+                                            Padding(
+                                              padding: const EdgeInsets.only(
+                                                  left: 21.0, right: 23),
+                                              child: Text(
+                                                AppLocalizations.of(context)!
+                                                    .hum,
                                                 style: GoogleFonts.getFont(
                                                   "Overpass",
                                                   fontSize: 14.sp,
                                                   color: Colors.white,
                                                 ),
-                                              )
-                                            ],
-                                          ),
-                                        ],
-                                      ),
-                                    ],
-                                  ),
+                                              ),
+                                            )
+                                          ],
+                                        ),
+                                        Column(
+                                          children: [
+                                            Text(
+                                              "$humidity %",
+                                              style: GoogleFonts.getFont(
+                                                "Overpass",
+                                                fontSize: 14.sp,
+                                                color: Colors.white,
+                                              ),
+                                            )
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                  ],
                                 ),
                               ),
                             ),
-                          ],
-                        );
-                      }
+                          ),
+                        ],
+                      ),
+                    );
+                  }
 
-                      return const CircularProgressIndicator(
-                        color: Colors.white,
-                      );
-                    },
-                  ),
-                  const Spacer(),
+                  return const CircularProgressIndicator(
+                    color: Colors.white,
+                  );
+                },
+              ),
+              bottomNavigationBar: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisSize: MainAxisSize.min,
+                children: [
                   Padding(
-                    padding: const EdgeInsets.only(bottom: 24),
+                    padding: const EdgeInsets.symmetric(vertical: 16),
                     child: Container(
-                      constraints:
-                      const BoxConstraints(minWidth: 200, maxWidth: 230),
+                      constraints: const BoxConstraints(minWidth: 200),
                       height: 60,
                       child: ElevatedButton(
                         onPressed: () => Navigator.pushNamed(
@@ -367,6 +366,7 @@ class _HomePageState extends State<HomePage> {
                         ),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
+                          mainAxisSize: MainAxisSize.min,
                           children: [
                             Text(
                               AppLocalizations.of(context)!.forecastReport,
@@ -393,7 +393,7 @@ class _HomePageState extends State<HomePage> {
                         ),
                       ),
                     ),
-                  )
+                  ),
                 ],
               ),
             );
