@@ -1,11 +1,6 @@
 # weather-app
 
-<p>
-    <img src="photos/image1.jpeg" width="400px" height="auto" hspace="5" vspace="20">
-    <img src="photos/image2.jpeg" width="400px" height="auto" hspace="5" vspace="20">
-    <img src="photos/image3.jpeg" width="400px" height="auto" hspace="5" vspace="20">
-    <img src="photos/image4.jpeg" width="400px" height="auto" hspace="5" vspace="20">
-</p>
+![App mockup](photos/mockup.jpg "App mockup")
 
 Weather app is a design implementation of [Weather Forecast App](https://www.figma.com/community/file/885501292477669105)" designed by [Maulana Farhan Najib](https://www.figma.com/@maulana).
 
@@ -14,6 +9,7 @@ Weather App is an Android-only application, built with Flutter, as a study of Fl
 ## Table of Contents
 - [weather-app](#weather-app)
   - [Table of Contents](#table-of-contents)
+  - [Images](#images)
   - [Features](#features)
   - [To-Do](#to-do)
   - [Directory Structure](#directory-structure)
@@ -25,6 +21,14 @@ Weather App is an Android-only application, built with Flutter, as a study of Fl
     - [Building](#building)
   - [Pull Requests](#pull-requests)
   - [Created & Maintained By](#created--maintained-by)
+
+## Images
+<p>
+    <img src="photos/image1.jpeg" width="400px" height="auto" hspace="5" vspace="20">
+    <img src="photos/image2.jpeg" width="400px" height="auto" hspace="5" vspace="20">
+    <img src="photos/image3.jpeg" width="400px" height="auto" hspace="5" vspace="20">
+    <img src="photos/image4.jpeg" width="400px" height="auto" hspace="5" vspace="20">
+</p>
 
 ## Features
 - ✅ Detailed forecast
