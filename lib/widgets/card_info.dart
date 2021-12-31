@@ -24,12 +24,14 @@ class CardInfo extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(
-                  title,
-                  style: GoogleFonts.getFont(
-                    "Overpass",
-                    fontSize: 16,
-                    color: const Color(0xFF838BAA),
+                Expanded(
+                  child: Text(
+                    title,
+                    style: GoogleFonts.getFont(
+                      "Overpass",
+                      fontSize: 16,
+                      color: const Color(0xFF838BAA),
+                    ),
                   ),
                 ),
                 Text(
