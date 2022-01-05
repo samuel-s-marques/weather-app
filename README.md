@@ -46,6 +46,7 @@ Weather App is an Android-only application, built with Flutter, as a study of Fl
 - [ ] Add dark mode
 - [ ] Add settings page
 - [ ] Add splash page
+- [ ] Add button to check updates (or smth)
 
 ## Directory Structure
 ```
