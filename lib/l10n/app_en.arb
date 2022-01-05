@@ -13,7 +13,7 @@
   "sunset": "Sunset",
   "airPressure": "Air pressure",
   "humidity": "Humidity",
-  "cloudness": "Cloudness",
+  "cloudness": "Cloudiness",
   "forecastReport": "Forecast report",
   "gpsPermission": "You need to allow GPS permissions to use this app.",
   "tryAgain": "Try again",
