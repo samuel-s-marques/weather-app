@@ -39,12 +39,14 @@ Weather App is an Android-only application, built with Flutter, as a study of Fl
 
 ## To-Do
 - [ ] Implement Hive DB
-- [ ] Create settings page
 - [ ] Implement search by speech
 - [ ] Add more languages
 - [ ] Add notification system
-- [ ] Dark mode
-- [ ] Create home screen widgets
+- [ ] Add home screen widgets
+- [ ] Add dark mode
+- [ ] Add settings page
+- [ ] Add splash page
+- [ ] Add button to check updates (or smth)
 
 ## Directory Structure
 ```
