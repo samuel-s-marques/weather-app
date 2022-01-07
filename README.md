@@ -34,7 +34,7 @@ Weather App is an Android-only application, built with Flutter, as a study of Fl
 - ✅ Detailed forecast
 - ✅ Up to seven days forecast
 - ✅ Coverage from anywhere
-- ✅ Multi-language (JA, PT, EN, ES)
+- ✅ Multi-language (JA, PT, EN, ES, AR)
 - ✅ Custom icons for each weather condition
 
 ## To-Do
